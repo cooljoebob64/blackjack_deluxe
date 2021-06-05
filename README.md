@@ -5,6 +5,9 @@
 This application will allow you to play the card game Blackjack via command-line interface. The game design offers an
 accurate rule-set and configurable options to suit player preference.
 
+The goal of this project is to demonstrate good coding practices, including testing, documentation, encapsulation, and 
+modularity.
+
 This application is a work in progress. Check back soon for updates!
 
 ## 📚 Table of Contents
