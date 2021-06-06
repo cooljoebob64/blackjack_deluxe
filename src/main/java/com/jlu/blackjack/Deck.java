@@ -7,6 +7,8 @@ public class Deck {
     Game currentGame;
     public Deck(Game currentGame){
         this.currentGame = currentGame;
+        currentShoe = new Stack<>();
+        reloadShoe();
     }
     private Stack<Card> currentShoe;
 
