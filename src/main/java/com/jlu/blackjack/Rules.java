@@ -45,6 +45,10 @@ public class Rules {
         setMinBet(5.00);
     }
 
+    public void getFormattedRules(){
+
+    }
+
     public boolean isInsurance() {
         return insurance;
     }
