@@ -10,15 +10,6 @@ public class Rules {
     private boolean insurance; // Is insurance offered?
     private double insurancePayout; // Insurance payout rate?
     private boolean evenMoney; // Is Even Money offered?
-
-    public double getPenetration() {
-        return penetration;
-    }
-
-    public void setPenetration(double penetration) {
-        this.penetration = penetration;
-    }
-
     private double penetration; // How far into the shoe before reloading?
     private int decksToLoad; // How many decks to load into the shoe when needed?
     private boolean clearShoeOnLoad; // Should the shoe be emptied first when reloaded?
@@ -79,6 +70,14 @@ public class Rules {
 
     public void setEvenMoney(boolean evenMoney) {
         this.evenMoney = evenMoney;
+    }
+
+    public double getPenetration() {
+        return penetration;
+    }
+
+    public void setPenetration(double penetration) {
+        this.penetration = penetration;
     }
 
     public int getDecksToLoad() {
