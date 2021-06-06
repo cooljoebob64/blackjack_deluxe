@@ -15,5 +15,10 @@ public class Deck {
     public void shuffle(){}
     public void burn(){}
 
-
+    public int getCardsInShoe(){
+        return currentShoe.size();
+    }
+    public Card getPeekCard(){
+        return currentShoe.peek();
+    }
 }
