@@ -12,6 +12,16 @@ public class Rules {
     private boolean insurance; // Is insurance offered?
     private double insurancePayout; // Insurance payout rate?
     private boolean evenMoney; // Is Even Money offered?
+
+    public double getPenetration() {
+        return penetration;
+    }
+
+    public void setPenetration(double penetration) {
+        this.penetration = penetration;
+    }
+
+    private double penetration; // How far into the shoe before reloading?
     private int decksToLoad; // How many decks to load into the shoe when needed?
     private boolean clearShoeOnLoad; // Should the shoe be emptied first when reloaded?
     private int pushRule; // No action, player win, player loss?
@@ -26,20 +36,13 @@ public class Rules {
         setInsurance(true);
         setInsurancePayout(2.0);
         setEvenMoney(true);
+        setPenetration(0.75);
         setDecksToLoad(2);
         setClearShoeOnLoad(true);
         setPushRule(0);
         setDealerHitsSoft17(true);
         setBlackjackPayout(1.5);
         setMinBet(5.00);
-    }
-
-    /**
-     * Provides a list of current rules in String format
-     * @return A String representing the list of rules that are currently in force
-     */
-    public String listRules(){
-        return "";
     }
 
     public boolean isInsurance() {
