@@ -6,8 +6,8 @@ import java.util.Scanner;
 
 public class Main {
 
-    static Scanner myScanner;
-    static String response;
+    private static Scanner myScanner;
+
     /**
      * Main class which starts the game and interacts with the user.
      * @param args Arguments provided at run time
@@ -15,7 +15,7 @@ public class Main {
     public static void main(String[] args){
 
         myScanner = new Scanner(System.in);
-        response = "";
+        String response = "";
         boolean inMenu = true;
 
         printLine();
@@ -49,19 +49,23 @@ public class Main {
     }
 
     private static void printLine(){
+        // Provides a re-usable way to print a graphical line in the console
         System.out.println("================================================");
     }
 
     private static void enterToContinue(){
+        // Prompts the user to press enter before continuing
         System.out.println("Press Enter to continue...");
         myScanner.nextLine();
     }
 
     private static void defaultGame() {
+        // Launch the game with default rules
         System.out.println("Starting a new game with default rules!");
         new Game();
     }
     private static void customGame() {
+        // Provide the user with some options about how to customize rules for the game
         System.out.println("Custom rules are not yet implemented, sorry!");
         defaultGame();
     }
