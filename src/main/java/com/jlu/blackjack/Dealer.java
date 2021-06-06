@@ -1,6 +1,12 @@
 package com.jlu.blackjack;
 
 public class Dealer implements Participant{
+
+    Game currentGame;
+    public Dealer(Game currentGame){
+        this.currentGame = currentGame;
+    }
+
     @Override
     public String getName() {
         return null;

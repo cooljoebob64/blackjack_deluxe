@@ -5,6 +5,11 @@ public class Player implements Participant {
     private String playerName;
     private int bank;
 
+    Game currentGame;
+    public Player(Game currentGame){
+        this.currentGame = currentGame;
+    }
+
     @Override
     public String getName() {
         return playerName;
