@@ -4,7 +4,7 @@ import java.util.Stack;
 
 public class Deck {
 
-    private Stack<CARD> currentShoe;
+    private Stack<Card> currentShoe;
 
     public void reloadShoe(){}
     public void dealCard(){}
