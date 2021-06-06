@@ -8,21 +8,21 @@ class CardTest {
 
     @Test
     void handValue() {
-        fail();
+        fail("Test not implemented.");
     }
 
     @Test
     void cardName() {
-        fail();
+        fail("Test not implemented.");
     }
 
     @Test
     void values() {
-        fail();
+        fail("Test not implemented.");
     }
 
     @Test
     void valueOf() {
-        fail();
+        fail("Test not implemented.");
     }
 }
