@@ -44,6 +44,7 @@ public class Game {
     private void mainLoop(){
         do{
             System.out.println("Main game loop.");
+            System.out.println(currentRules.getFormattedRules());
             keepPlaying=false;
         } while(keepPlaying);
     }
