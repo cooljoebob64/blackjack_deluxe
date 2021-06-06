@@ -10,5 +10,6 @@ public class Hand {
     void possibleValues(){}
     void highestNonBust(){}
     void clearHand(){}
+    void getActions(){}
 
 }
