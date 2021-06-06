@@ -3,6 +3,7 @@ package com.jlu.blackjack;
 public class Player implements Participant {
 
     private String playerName;
+    private int bank;
 
     @Override
     public String getName() {
