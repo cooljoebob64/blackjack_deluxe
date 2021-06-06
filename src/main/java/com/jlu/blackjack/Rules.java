@@ -1,10 +1,8 @@
 package com.jlu.blackjack;
 
-import java.util.List;
-
 public class Rules {
 
-    public enum pushRuleOptions{
+    public enum PushRuleOptions {
         NO_ACTION, PLAYER_WIN, PLAYER_LOSS
     }
 
@@ -53,7 +51,7 @@ public class Rules {
                 "Shoe Penetration: " + getPenetration() + "\n" +
                 "Decks On Shoe Reload: " + getDecksToLoad() + "\n" +
                 "Clear Shoe On Reload: " + isClearShoeOnLoad() + "\n" +
-                "Push Rule: " + getPushRule() + "\n" +
+                "Push Rule: " + PushRuleOptions.values()[getPushRule()] + "\n" +
                 "Dealer Hits on Soft 17: " + isDealerHitsSoft17() + "\n" +
                 "Blackjack Payout: " + getBlackjackPayout() + "\n" +
                 "Minimum Bet: " + getMinBet() + "\n";
