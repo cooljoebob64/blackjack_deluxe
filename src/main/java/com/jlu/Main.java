@@ -18,18 +18,18 @@ public class Main {
         String response = "";
         boolean inMenu = true;
 
-        printLine();
+        drawLine();
         System.out.println("Welcome to Blackjack Deluxe!");
         enterToContinue();
         do {
-            printLine();
+            drawLine();
             System.out.println("Enter which option you'd like:");
             System.out.println("""
                     1: New Game with Default Rules
                     2: New Game with Custom Rules
                     Q: Quit""");
             response = myScanner.nextLine();
-            printLine();
+            drawLine();
 
             switch (response){
                 case "1" -> {defaultGame();}
@@ -48,8 +48,8 @@ public class Main {
         System.out.println("End of program.");
     }
 
-    private static void printLine(){
-        // Provides a re-usable way to print a graphical line in the console
+    private static void drawLine(){
+        // Provides a re-usable way to draw a graphical line in the console
         System.out.println("================================================");
     }
 
