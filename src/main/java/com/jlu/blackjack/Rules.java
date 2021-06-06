@@ -45,8 +45,18 @@ public class Rules {
         setMinBet(5.00);
     }
 
-    public void getFormattedRules(){
-
+    public String getFormattedRules(){
+        return "Current Rules:\n" +
+                "Insurance allowed: " + isInsurance() + "\n" +
+                "Insurance Payout: " + getInsurancePayout() + "\n" +
+                "Even Money allowed: " + isEvenMoney() + "\n" +
+                "Shoe Penetration: " + getPenetration() + "\n" +
+                "Decks On Shoe Reload: " + getDecksToLoad() + "\n" +
+                "Clear Shoe On Reload: " + isClearShoeOnLoad() + "\n" +
+                "Push Rule: " + getPushRule() + "\n" +
+                "Dealer Hits on Soft 17: " + isDealerHitsSoft17() + "\n" +
+                "Blackjack Payout: " + getBlackjackPayout() + "\n" +
+                "Minimum Bet: " + getMinBet() + "\n";
     }
 
     public boolean isInsurance() {
