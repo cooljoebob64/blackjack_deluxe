@@ -4,18 +4,14 @@ import java.util.Stack;
 
 public class Deck {
 
-    Game currentGame;
-    public Deck(Game currentGame){
-        this.currentGame = currentGame;
+    private Stack<Card> currentShoe;
+    private Rules gameRules;
+
+    public Deck(Rules gameRules){
+        this.gameRules = gameRules;
         currentShoe = new Stack<>();
         reloadShoe();
     }
-    private Stack<Card> currentShoe;
-
-    public void reloadShoe(){}
-    public void dealCard(){}
-    public void shuffle(){}
-    public void burn(){}
 
     public int getCardsInShoe(){
         return currentShoe.size();
@@ -23,4 +19,15 @@ public class Deck {
     public Card getPeekCard(){
         return currentShoe.peek();
     }
+    public void newRules(Rules newRules){
+        this.gameRules = newRules;
+    }
+
+    public void reloadShoe(){}
+    public Card dealCard(){
+        return Card.C2;
+    }
+    public void shuffle(){}
+    public void burn(){}
+
 }
