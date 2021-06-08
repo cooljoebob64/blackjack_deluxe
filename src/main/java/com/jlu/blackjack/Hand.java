@@ -1,9 +1,12 @@
 package com.jlu.blackjack;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Hand {
+
+
 
     public Hand(Rules currentRules){
         this.currentRules = currentRules;
@@ -49,6 +52,14 @@ public class Hand {
     }
     void addAction(Action newAction){
 
+    }
+
+    private Participant owner;
+    public Participant getOwner() {
+        return owner;
+    }
+    public void setOwner(Participant owner) {
+        this.owner = owner;
     }
 
 }
