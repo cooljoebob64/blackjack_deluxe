@@ -22,10 +22,6 @@ public interface Participant {
      */
     Hand getCurrentHand();
 
-    /**
-     * Get the participant's secondary hand in case of a split
-     * @return a Hand object that is the split hand (if any)
-     */
-    Hand getSplitHand();
+
 
 }

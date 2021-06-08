@@ -2,9 +2,10 @@ package com.jlu.blackjack;
 
 public class Dealer implements Participant{
 
-    Game currentGame;
-    public Dealer(Game currentGame){
-        this.currentGame = currentGame;
+
+    Rules currentRules;
+    public Dealer(Rules currentRules){
+        this.currentRules = currentRules;
     }
 
     @Override
@@ -22,8 +23,12 @@ public class Dealer implements Participant{
         return null;
     }
 
-    @Override
-    public Hand getSplitHand() {
-        return null;
+
+    public Rules getCurrentRules() {
+        return currentRules;
+    }
+
+    public void setCurrentRules(Rules currentRules) {
+        this.currentRules = currentRules;
     }
 }

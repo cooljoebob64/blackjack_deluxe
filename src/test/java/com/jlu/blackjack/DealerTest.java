@@ -1,28 +1,49 @@
 package com.jlu.blackjack;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DealerTest {
 
-    @Test
-    void getName() {
-        fail("Test not implemented.");
+    Rules testRules;
+    Hand testHand;
+    Dealer testDealer;
+
+    @BeforeEach
+    void setUp(){
+        testRules = new Rules();
+        testHand = new Hand(testRules);
+        testDealer = new Dealer(testRules);
+
+        testHand.setOwner(testDealer);
     }
 
+
     @Test
-    void isStillActive() {
-        fail("Test not implemented.");
+    void isStillActiveBusted() {
+        boolean expectedInactive = false;
+        boolean actualInactive;
+
+        testHand.clearHand();
+        testHand.addCard(Card.DK);
+        testHand.addCard(Card.DK);
+        testHand.addCard(Card.DK);
+        actualInactive = testDealer.isStillActive();
+
+        assertEquals(expectedInactive, actualInactive);
     }
 
     @Test
     void getCurrentHand() {
-        fail("Test not implemented.");
+        Hand expectedHand = testHand;
+        Hand actualHand;
+
+        actualHand = testDealer.getCurrentHand();
+
+        assertEquals(expectedHand, actualHand);
     }
 
-    @Test
-    void getSplitHand() {
-        fail("Test not implemented.");
-    }
+
 }

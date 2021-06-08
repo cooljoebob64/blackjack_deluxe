@@ -25,7 +25,6 @@ public class Player implements Participant {
         return null;
     }
 
-    @Override
     public Hand getSplitHand() {
         return null;
     }
