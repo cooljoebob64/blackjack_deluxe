@@ -7,14 +7,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class PlayerTest {
 
     @Test
-    void getName() {
+    void isStillActiveBusted() {
         fail("Test not implemented.");
     }
 
     @Test
-    void isStillActive() {
-        fail("Test not implemented.");
+    void isStillActiveNotBusted(){
+        fail();
     }
+
+
 
     @Test
     void getCurrentHand() {

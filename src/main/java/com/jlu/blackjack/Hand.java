@@ -6,7 +6,14 @@ import java.util.List;
 
 public class Hand {
 
+    public int getBetAmount() {
+        return betAmount;
+    }
 
+    private int betAmount;
+
+    public void addBet(int addAmount){}
+    public void clearBet(){}
 
     public Hand(Rules currentRules){
         this.currentRules = currentRules;

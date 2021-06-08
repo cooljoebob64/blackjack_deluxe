@@ -116,4 +116,16 @@ class HandTest {
 
         assertEquals(expectedActions, actualActions);
     }
+
+    @Test
+    void addBet(){
+        int expectedBetAmount = 20;
+        int actualBetAmount;
+
+        testHand.clearBet();
+        testHand.addBet(20);
+        actualBetAmount = testHand.getBetAmount();
+
+        assertEquals(expectedBetAmount, actualBetAmount);
+    }
 }

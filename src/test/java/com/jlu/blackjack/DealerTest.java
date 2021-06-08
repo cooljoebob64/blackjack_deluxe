@@ -36,6 +36,18 @@ class DealerTest {
     }
 
     @Test
+    void isStillActiveNotBusted(){
+        boolean expectedActive = true;
+        boolean actualActive;
+
+        testHand.clearHand();
+        testHand.addCard(Card.D2);
+        actualActive = testDealer.isStillActive();
+
+        assertEquals(expectedActive, actualActive);
+    }
+
+    @Test
     void getCurrentHand() {
         Hand expectedHand = testHand;
         Hand actualHand;
