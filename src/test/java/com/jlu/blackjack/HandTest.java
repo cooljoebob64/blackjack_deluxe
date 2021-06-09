@@ -36,12 +36,14 @@ class HandTest {
 
     @Test
     void possibleValuesEmpty() {
+        // Possible value is always at least 1 (value 0)
+        int expectedEmptySize = 1;
         List<Integer> actualEmptyValue;
 
         testHand.clearHand();
         actualEmptyValue = testHand.possibleValues();
 
-        assertEquals(0, actualEmptyValue.size());
+        assertEquals(expectedEmptySize, actualEmptyValue.size());
 
     }
 
@@ -63,8 +65,8 @@ class HandTest {
     @Test
     void possibleValuesAce() {
         int expectedSize = 2;
-        int expectedFirstValue = 3;
-        int expectedSecondValue = 13;
+        int expectedFirstValue = 13;
+        int expectedSecondValue = 3;
         List<Integer> actualAceValue;
 
         testHand.clearHand();
@@ -72,9 +74,29 @@ class HandTest {
         testHand.addCard(Card.DA);
         actualAceValue = testHand.possibleValues();
 
+        System.out.println(testHand.getCurrentCards());
+        System.out.println(testHand.possibleValues());
+        System.out.println(testHand.possibleValuesNonBust());
+
         assertEquals(expectedSize, actualAceValue.size());
         assertEquals(expectedFirstValue, actualAceValue.get(0));
         assertEquals(expectedSecondValue, actualAceValue.get(1));
+    }
+
+
+    @Test
+    void possibleValuesNonBust(
+    ) {
+        int expectedSize = 2;
+        int actualSize;
+
+        testHand.clearHand();
+        testHand.addCard(Card.D2);
+        testHand.addCard(Card.DA);
+        testHand.addCard(Card.DA);
+        actualSize = testHand.possibleValuesNonBust().size();
+
+        assertEquals(expectedSize, actualSize);
     }
 
     @Test
@@ -108,10 +130,17 @@ class HandTest {
     @Test
     void getActions() {
         List<Action> expectedActions = new ArrayList<>();
-        expectedActions.add(Action.HIT);
-        expectedActions.add(Action.STAND);
-        expectedActions.add(Action.DOUBLE);
 
+        testHand.clearHand();
+        testHand.clearActions();
+        testHand.addCard(Card.D2);
+        testHand.addCard(Card.D3);
+
+        expectedActions.add(Action.HIT);
+        expectedActions.add(Action.DOUBLE);
+        expectedActions.add(Action.STAND);
+
+        testHand.calculateActions();
         List<Action> actualActions = testHand.getActions();
 
         assertEquals(expectedActions, actualActions);
@@ -128,4 +157,5 @@ class HandTest {
 
         assertEquals(expectedBetAmount, actualBetAmount);
     }
+
 }
