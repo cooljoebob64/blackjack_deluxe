@@ -1,67 +1,46 @@
 package com.jlu.blackjack;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Hand {
 
-    public int getBetAmount() {
-        return betAmount;
-    }
-
-    private int betAmount;
-
-    public void addBet(int addAmount){}
-    public void clearBet(){}
-
     public Hand(Rules currentRules){
         this.currentRules = currentRules;
     }
-
+    public int getBetAmount() {
+        return betAmount;
+    }
     public List<Card> getCurrentCards() {
         return currentCards;
     }
-
+    public void addBet(int addAmount){}
+    public void clearBet(){}
+    public List<Integer> possibleValues(){
+        return new ArrayList<>();
+    }
     public void setCurrentCards(List<Card> currentCards) {
         this.currentCards = currentCards;
     }
-
-
-
-
-    public Rules getCurrentRules() {
-        return currentRules;
-    }
-
-    public void setCurrentRules(Rules currentRules) {
-        this.currentRules = currentRules;
-    }
-
-    private Rules currentRules;
-    private List<Card> currentCards;
-    private boolean mainHand;
-
-    void addCard(Card newCard){}
-    List<Integer> possibleValues(){
-        return new ArrayList<>();
-    }
-    int highestNonBust(){
-        return 0;
-    }
-    void isMainHand(){}
     public void setMainHand(boolean mainHand) {
         this.mainHand = mainHand;
     }
-    void clearHand(){}
-    List<Action> getActions(){
+    public Rules getCurrentRules() {
+        return currentRules;
+    }
+    public void setCurrentRules(Rules currentRules) {
+        this.currentRules = currentRules;
+    }
+    public void addCard(Card newCard){}
+    public int highestNonBust(){
+        return 0;
+    }
+    public void isMainHand(){}
+    public void clearHand(){}
+    public List<Action> getActions(){
         return new ArrayList<>();
     }
-    void addAction(Action newAction){
-
-    }
-
-    private Participant owner;
+    public void addAction(Action newAction){}
     public Participant getOwner() {
         return owner;
     }
@@ -69,4 +48,9 @@ public class Hand {
         this.owner = owner;
     }
 
+    private int betAmount;
+    private Rules currentRules;
+    private List<Card> currentCards;
+    private boolean mainHand;
+    private Participant owner;
 }
