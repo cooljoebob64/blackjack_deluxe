@@ -17,6 +17,7 @@ public class Rules {
     private boolean dealerHitsSoft17; // Does the dealer hit on a soft 17?
     private double blackjackPayout; // Blackjack payout - 3:2, 2:1, custom?
     private double minBet; // Minimum starting bet?
+    // Number of cards to burn?
 
     /**
      * Empty constructor, employs most common default rules
