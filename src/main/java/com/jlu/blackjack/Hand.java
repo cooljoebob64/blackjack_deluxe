@@ -101,6 +101,11 @@ public class Hand {
     public void clearActions(){
         currentPossibleActions.clear();
     }
+    public Card splitHand(){
+        Card splitCard = currentCards.get(1);
+        currentCards.remove(1);
+        return splitCard;
+    }
 
     // Vanilla Getters and Setters
     public List<Card> getCurrentCards() {

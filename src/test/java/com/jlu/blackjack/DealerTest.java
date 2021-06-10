@@ -21,19 +21,19 @@ class DealerTest {
     }
 
 
-    @Test
-    void isStillActiveBusted() {
-        boolean expectedInactive = false;
-        boolean actualInactive;
-
-        testHand.clearHand();
-        testHand.addCard(Card.DK);
-        testHand.addCard(Card.DK);
-        testHand.addCard(Card.DK);
-        actualInactive = testDealer.isStillActive();
-
-        assertEquals(expectedInactive, actualInactive);
-    }
+//    @Test
+//    void isStillActiveBusted() {
+//        boolean expectedInactive = false;
+//        boolean actualInactive;
+//
+//        testHand.clearHand();
+//        testHand.addCard(Card.DK);
+//        testHand.addCard(Card.DK);
+//        testHand.addCard(Card.DK);
+//        actualInactive = testDealer.isStillActive();
+//
+//        assertEquals(expectedInactive, actualInactive);
+//    }
 
     @Test
     void isStillActiveNotBusted(){

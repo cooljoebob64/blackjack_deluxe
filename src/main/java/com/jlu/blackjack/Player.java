@@ -59,7 +59,12 @@ public class Player implements Participant {
             return null;
     }
     public void newHand(Hand newHand){
+        newHand.setOwner(this);
         hands.add(newHand);
+    }
+    public void newSplitHand(Hand newSplitHand){
+        newSplitHand.setMainHand(false);
+        newHand(newSplitHand);
     }
     public void clearHands(){
         hands.clear();
