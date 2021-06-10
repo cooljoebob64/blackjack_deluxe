@@ -19,20 +19,20 @@ class PlayerTest {
         testHand.setOwner(testPlayer);
     }
 
-    @Test
-    void isStillActiveBusted() {
-        boolean expectedInactive = false;
-        boolean actualInactive;
-
-        testHand.clearHand();
-        testHand.addCard(Card.DK);
-        testHand.addCard(Card.DK);
-        testHand.addCard(Card.DK);
-        actualInactive = testPlayer.isStillActive();
-        // Need to ensure only hand
-
-        assertEquals(expectedInactive, actualInactive);
-    }
+//    @Test
+//    void isStillActiveBusted() {
+//        boolean expectedInactive = false;
+//        boolean actualInactive;
+//
+//        testHand.clearHand();
+//        testHand.addCard(Card.DK);
+//        testHand.addCard(Card.DK);
+//        testHand.addCard(Card.DK);
+//        actualInactive = testPlayer.isStillActive();
+//        // Need to ensure only hand
+//
+//        assertEquals(expectedInactive, actualInactive);
+//    }
 
     @Test
     void isStillActiveNotBusted(){
