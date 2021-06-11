@@ -26,10 +26,12 @@ public class Deck {
         // If the rules require it, clear the shoe before reloading
         if(gameRules.isClearShoeOnLoad()){
             currentShoe.clear();
+            System.out.println("Clearing shoe...");
         }
 
         // Determine the number of decks that must be loaded at once
         int decksToLoad = gameRules.getDecksToLoad();
+        System.out.println("Reloading shoe with " + decksToLoad + " decks.");
 
         // For each deck that must be loaded, make a shuffled deck and add each card to the shoe
         for(int i=0; i<decksToLoad; i++){
@@ -68,7 +70,12 @@ public class Deck {
      * @return The next Card on top of the shoe
      */
     public Card dealCard(){
-        return currentShoe.pop();
+        Card dealCard = currentShoe.pop();
+        int initialSize = gameRules.getDecksToLoad()*52;
+        if(currentShoe.size()< initialSize-(gameRules.getPenetration()*(initialSize))){
+            reloadShoe();
+        }
+        return dealCard;
     }
 
 //    /**

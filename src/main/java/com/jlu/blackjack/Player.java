@@ -69,6 +69,9 @@ public class Player implements Participant {
     public void clearHands(){
         hands.clear();
     }
+    public List<Hand> getAllHands(){
+        return this.hands;
+    }
     public void bet(Hand bettingHand, int betAmount){
         this.bank -= betAmount;
         bettingHand.addBet(betAmount);
@@ -81,6 +84,6 @@ public class Player implements Participant {
     private String playerName;
     private Rules currentRules;
     private int bank;
-    private List<Hand> hands;
+    private final List<Hand> hands;
     private boolean active;
 }

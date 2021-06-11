@@ -13,6 +13,7 @@ public class Hand {
         this.gameRules = gameRules;
         this.currentCards = new ArrayList<>();
         this.currentPossibleActions = new ArrayList<>();
+        this.setMainHand(true);
     }
 
     /**
@@ -52,6 +53,16 @@ public class Hand {
         return values;
     }
 
+    public String cardsToString(){
+        StringBuilder cards = new StringBuilder();
+        for(Card card: currentCards){
+            cards.append(card.cardName());
+            if(currentCards.indexOf(card)!=currentCards.size()){
+                cards.append(", ");
+            }
+        }
+        return cards.toString();
+    }
 
     /**
      * Calculates the actions that are possible given the current cards in hand
@@ -93,7 +104,9 @@ public class Hand {
         return valuesNonBust;
     }
     public int highestNonBust(){
-        return possibleValuesNonBust().get(0);
+        if(!possibleValuesNonBust().isEmpty()){
+            return possibleValuesNonBust().get(0);
+        } else return possibleValues().get(0);
     }
     public void clearHand(){
         currentCards.clear();
@@ -101,11 +114,11 @@ public class Hand {
     public void clearActions(){
         currentPossibleActions.clear();
     }
-    public Card splitHand(){
-        Card splitCard = currentCards.get(1);
-        currentCards.remove(1);
-        return splitCard;
-    }
+//    public Card splitHand(){
+//        Card splitCard = currentCards.get(1);
+//        currentCards.remove(1);
+//        return splitCard;
+//    }
 
     // Vanilla Getters and Setters
     public List<Card> getCurrentCards() {

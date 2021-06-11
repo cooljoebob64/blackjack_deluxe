@@ -1,9 +1,18 @@
 package com.jlu.blackjack;
 
 public enum Action {
-    HIT,
-    STAND,
-    SPLIT,
-    DOUBLE,
-    SURRENDER;
+    HIT("H"),
+    STAND("S"),
+    SPLIT("T"),
+    DOUBLE("D"),
+    SURRENDER("R"),
+    QUIT("Q");
+
+    private final String commandLetter;
+    Action(String commandLetter){
+        this.commandLetter=commandLetter;
+    }
+    String commandLetter(){
+        return this.commandLetter;
+    }
 }
