@@ -27,10 +27,13 @@ This application is a work in progress. Check back soon for updates!
 - None so far!
 
 ## 📦 Installation
-- None so far!
+- Clone the repository to your machine
+- This repository is currently not set to automatically build a package. That is coming soon!
 
 ## 🚀 Usage
-- None so far!
+- You can run the program in your terminal by navigating to the project directory, and running the command 
+  `gradle --console plain run`
+- You can also run the Main class in your Java IDE of choice
 
 ## 💻 Technologies
 - [Java JDK 15](https://www.oracle.com/java/technologies/javase/jdk15-archive-downloads.html)
