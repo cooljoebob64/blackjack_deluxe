@@ -90,38 +90,30 @@ public class Game {
     }
 
     private void mainLoop(){
-        System.out.println("Main game loop.");
-        enterToContinue();
+//        System.out.println("Main game loop.");
+//        enterToContinue();
 
         do{
-            switch(currentState){
-                case PRE_DEAL:{
+            switch (currentState) {
+                case PRE_DEAL -> {
                     preDeal();
-                    break;
                 }
-                case PLAYER_ACTIONS:
-                {
+                case PLAYER_ACTIONS -> {
                     playerActions();
-                    break;
                 }
-                case DEALER_UP:{
+                case DEALER_UP -> {
                     dealerUp();
-                    break;
                 }
-                case DEALER_REVEAL:{
+                case DEALER_REVEAL -> {
                     dealerReveal();
-                    break;
                 }
-                case PAYOUT:{
+                case PAYOUT -> {
                     payout();
-                    break;
                 }
-                case CLEANUP:{
+                case CLEANUP -> {
                     cleanup();
-                    break;
                 }
-                default:
-                    System.out.println("Error! State not loaded.");
+                default -> System.out.println("Error! State not loaded.");
             }
         } while(keepPlaying);
     }
@@ -142,6 +134,7 @@ public class Game {
             boolean stillBetting = true;
             do {
                 if(player.getBank()<minBet){
+                    System.out.println("Your current bank: " + player.getBank());
                     System.out.println("Hey, you are all outta money!");
                     System.out.println("That's alright, we're really nice here.");
                     System.out.println("We'll put you back in the game.");
@@ -211,17 +204,15 @@ public class Game {
                     }
                 }
                 case "Q" -> {
-                    if (firstPlayer.getCurrentHand().getActions().contains(Action.QUIT)) {
-                        playerActionQuit();
-                        validChoice = true;
-                    }
+                    playerActionQuit();
+                    validChoice = true;
                 }
                 default -> {
                     System.out.println("Invalid command!");
                     validChoice = false;
                 }
             }
-            enterToContinue();
+//            enterToContinue();
         } while(!validChoice);
     }
 
@@ -255,6 +246,9 @@ public class Game {
     }
     private void playerActionDouble() {
         System.out.println("You double down!");
+        if(firstPlayer.getBank()<activeHand.getBetAmount()){
+            System.out.println("You're going into the negative here... But we'll allow it.");
+        }
         firstPlayer.bet(activeHand, activeHand.getBetAmount());
         playerActionHit();
         playerActionStand();
@@ -270,6 +264,7 @@ public class Game {
     private void playerActionQuit() {
         System.out.println("Quitting!");
         keepPlaying = false;
+        currentState = State.CLEANUP;
     }
 
     private void dealerUp(){
