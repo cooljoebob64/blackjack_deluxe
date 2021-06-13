@@ -10,8 +10,8 @@ public class Hand {
      * @param gameRules The game rules for the Player object to use
      */
     public Hand(Rules gameRules){
-        this.gameRules = gameRules;
-        this.currentCards = new ArrayList<>();
+        this.setGameRules(gameRules);
+        this.setCurrentCards(new ArrayList<>());
         this.currentPossibleActions = new ArrayList<>();
         this.setMainHand(true);
     }
@@ -114,11 +114,6 @@ public class Hand {
     public void clearActions(){
         currentPossibleActions.clear();
     }
-//    public Card splitHand(){
-//        Card splitCard = currentCards.get(1);
-//        currentCards.remove(1);
-//        return splitCard;
-//    }
 
     // Vanilla Getters and Setters
     public List<Card> getCurrentCards() {
