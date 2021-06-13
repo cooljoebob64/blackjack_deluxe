@@ -5,29 +5,48 @@ import java.util.Scanner;
 
 public class RulesBuilder {
     private final static Scanner myScanner = new Scanner(System.in);
-    private static void drawLine(){
-        // Provides a re-usable way to draw a graphical line in the console
-        System.out.println("""
-              \s\s+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+ +-+-+-+-+ +-+-+-+-+-+-+-+
-              \s\s|B|l|a|c|k|j|a|c|k| |D|e|l|u|x|e| |-| |R|u|l|e| |B|u|i|l|d|e|r|
-              \s\s+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+ +-+-+-+-+ +-+-+-+-+-+-+-+
-                """);
-    }
-    private static void enterToContinue(){
-        // Prompts the user to press enter before continuing
-        System.out.println("Press Enter to continue...");
-        myScanner.nextLine();
-    }
-    private static void clearScreen(){
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    }
 
     public static Rules buildDefaultRules(){
         clearScreen();
         drawLine();
         return new Rules();
     }
+    public static Rules buildEZRules(){
+        Rules ezRules = new Rules();
 
+        ezRules.setInsurance(true);
+        ezRules.setInsurancePayout(2.5);
+        ezRules.setEvenMoney(true);
+        ezRules.setPenetration(.99);
+        ezRules.setDecksToLoad(1);
+        ezRules.setClearShoeOnLoad(false);
+        ezRules.setPushRule(1);
+        ezRules.setDealerHitsSoft17(false);
+        ezRules.setBlackjackPayout(3.0);
+        ezRules.setMinBet(1);
+        ezRules.setStartingBank(100);
+        ezRules.setCheatMode(true);
+
+        return ezRules;
+    }
+    public static Rules buildHardRules(){
+        Rules hardRules = new Rules();
+
+        hardRules.setInsurance(false);
+        hardRules.setInsurancePayout(2.0);
+        hardRules.setEvenMoney(false);
+        hardRules.setPenetration(.65);
+        hardRules.setDecksToLoad(3);
+        hardRules.setClearShoeOnLoad(true);
+        hardRules.setPushRule(2);
+        hardRules.setDealerHitsSoft17(true);
+        hardRules.setBlackjackPayout(1.2);
+        hardRules.setMinBet(10);
+        hardRules.setStartingBank(50);
+        hardRules.setCheatMode(false);
+
+        return hardRules;
+    }
     public static Rules buildCustomRules() {
         clearScreen();
         drawLine();
@@ -455,43 +474,6 @@ public class RulesBuilder {
         return customRules;
     }
 
-    public static Rules buildEZRules(){
-        Rules ezRules = new Rules();
-
-        ezRules.setInsurance(true);
-        ezRules.setInsurancePayout(2.5);
-        ezRules.setEvenMoney(true);
-        ezRules.setPenetration(.99);
-        ezRules.setDecksToLoad(1);
-        ezRules.setClearShoeOnLoad(false);
-        ezRules.setPushRule(1);
-        ezRules.setDealerHitsSoft17(false);
-        ezRules.setBlackjackPayout(3.0);
-        ezRules.setMinBet(1);
-        ezRules.setStartingBank(100);
-        ezRules.setCheatMode(true);
-
-        return ezRules;
-    }
-    public static Rules buildHardRules(){
-        Rules hardRules = new Rules();
-
-        hardRules.setInsurance(false);
-        hardRules.setInsurancePayout(2.0);
-        hardRules.setEvenMoney(false);
-        hardRules.setPenetration(.65);
-        hardRules.setDecksToLoad(3);
-        hardRules.setClearShoeOnLoad(true);
-        hardRules.setPushRule(2);
-        hardRules.setDealerHitsSoft17(true);
-        hardRules.setBlackjackPayout(1.2);
-        hardRules.setMinBet(10);
-        hardRules.setStartingBank(50);
-        hardRules.setCheatMode(false);
-
-        return hardRules;
-    }
-
     public static void previewRules(Rules potentialRules){
 
         boolean awaitingInput = true;
@@ -523,6 +505,23 @@ public class RulesBuilder {
                 enterToContinue();
             }
         } while (awaitingInput);
+    }
+
+    private static void drawLine(){
+        // Provides a re-usable way to draw a graphical line in the console
+        System.out.println("""
+              \s\s+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+ +-+-+-+-+ +-+-+-+-+-+-+-+
+              \s\s|B|l|a|c|k|j|a|c|k| |D|e|l|u|x|e| |-| |R|u|l|e| |B|u|i|l|d|e|r|
+              \s\s+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+ +-+-+-+-+ +-+-+-+-+-+-+-+
+                """);
+    }
+    private static void enterToContinue(){
+        // Prompts the user to press enter before continuing
+        System.out.println("Press Enter to continue...");
+        myScanner.nextLine();
+    }
+    private static void clearScreen(){
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 
 }
