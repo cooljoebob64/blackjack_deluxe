@@ -38,7 +38,7 @@ public class Rules {
         setBlackjackPayout(1.5);
         setMinBet(5.00);
         setStartingBank(50);
-        setCheatMode(true);
+        setCheatMode(false);
     }
 
     public String getFormattedRules(){

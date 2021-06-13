@@ -455,6 +455,43 @@ public class RulesBuilder {
         return customRules;
     }
 
+    public static Rules buildEZRules(){
+        Rules ezRules = new Rules();
+
+        ezRules.setInsurance(true);
+        ezRules.setInsurancePayout(2.5);
+        ezRules.setEvenMoney(true);
+        ezRules.setPenetration(.99);
+        ezRules.setDecksToLoad(1);
+        ezRules.setClearShoeOnLoad(false);
+        ezRules.setPushRule(1);
+        ezRules.setDealerHitsSoft17(false);
+        ezRules.setBlackjackPayout(3.0);
+        ezRules.setMinBet(1);
+        ezRules.setStartingBank(100);
+        ezRules.setCheatMode(true);
+
+        return ezRules;
+    }
+    public static Rules buildHardRules(){
+        Rules hardRules = new Rules();
+
+        hardRules.setInsurance(false);
+        hardRules.setInsurancePayout(2.0);
+        hardRules.setEvenMoney(false);
+        hardRules.setPenetration(.65);
+        hardRules.setDecksToLoad(3);
+        hardRules.setClearShoeOnLoad(true);
+        hardRules.setPushRule(2);
+        hardRules.setDealerHitsSoft17(true);
+        hardRules.setBlackjackPayout(1.2);
+        hardRules.setMinBet(10);
+        hardRules.setStartingBank(50);
+        hardRules.setCheatMode(false);
+
+        return hardRules;
+    }
+
     public static void previewRules(Rules potentialRules){
 
         boolean awaitingInput = true;
