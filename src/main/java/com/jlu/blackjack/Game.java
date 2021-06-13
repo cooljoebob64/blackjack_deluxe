@@ -18,7 +18,7 @@ public class Game {
 
     private final Scanner myScanner;
 //    private List<Participant> allParticipants;
-    private List<Player> players;
+    private final List<Player> players;
     private boolean keepPlaying;
     private Player firstPlayer;
     private Dealer dealer;

@@ -17,6 +17,10 @@ public class Rules {
     private boolean dealerHitsSoft17; // Does the dealer hit on a soft 17?
     private double blackjackPayout; // Blackjack payout - 3:2, 2:1, custom?
     private double minBet; // Minimum starting bet?
+
+
+    private int startingBank; // Starting bank?
+    private boolean cheatMode; // Cheat mode?
     // Number of cards to burn?
 
     /**
@@ -33,6 +37,8 @@ public class Rules {
         setDealerHitsSoft17(true);
         setBlackjackPayout(1.5);
         setMinBet(5.00);
+        setStartingBank(50);
+        setCheatMode(true);
     }
 
     public String getFormattedRules(){
@@ -129,6 +135,21 @@ public class Rules {
         this.minBet = minBet;
     }
 
+    public int getStartingBank() {
+        return startingBank;
+    }
+
+    public void setStartingBank(int startingBank) {
+        this.startingBank = startingBank;
+    }
+
+    public boolean isCheatMode() {
+        return cheatMode;
+    }
+
+    public void setCheatMode(boolean cheatMode) {
+        this.cheatMode = cheatMode;
+    }
 
 
 }
