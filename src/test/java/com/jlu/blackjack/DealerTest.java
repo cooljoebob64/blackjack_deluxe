@@ -47,15 +47,16 @@ class DealerTest {
         assertEquals(expectedActive, actualActive);
     }
 
-    @Test
-    void getCurrentHand() {
-        Hand expectedHand = testHand;
-        Hand actualHand;
-
-        actualHand = testDealer.getCurrentHand();
-
-        assertEquals(expectedHand, actualHand);
-    }
+//    @Test
+//    void getCurrentHand() {
+//        Hand expectedHand = testHand;
+//        Hand actualHand;
+//
+//
+//        actualHand = testDealer.getCurrentHand();
+//
+//        assertEquals(expectedHand, actualHand);
+//    }
 
 
 }

@@ -12,14 +12,14 @@ class GameTest {
         Rules customRules = new Rules();
     }
 
-    @Test
-    void emptyConstructor(){
-        fail("Test not implemented.");
-    }
-
-    @Test
-    void customRulesConstructor(){
-        fail("Test not implemented.");
-    }
+//    @Test
+//    void emptyConstructor(){
+//        fail("Test not implemented.");
+//    }
+//
+//    @Test
+//    void customRulesConstructor(){
+//        fail("Test not implemented.");
+//    }
 
 }
