@@ -199,6 +199,7 @@ public class Game {
         boolean validChoice = false;
         do {
             printBoard();
+            printPossibleActions();
             String isSplitHand = "main";
             if(!activeHand.isMainHand()){
                 isSplitHand = "split";
@@ -321,8 +322,13 @@ public class Game {
         System.out.println("You split!");
         firstPlayer.newHand(new Hand(currentRules));
         firstPlayer.getSplitHand().addCard(activeHand.getCurrentCards().get(1));
+        firstPlayer.getSplitHand().setMainHand(false);
         firstPlayer.bet(firstPlayer.getSplitHand(), activeHand.getBetAmount());
         activeHand.getCurrentCards().remove(1);
+        System.out.println("Your main hand: " + firstPlayer.getCurrentHand().cardsToString());
+        System.out.println("Possible values: " + firstPlayer.getCurrentHand().possibleValues());
+        System.out.println("Your split hand: " + firstPlayer.getSplitHand().cardsToString());
+        System.out.println("Possible values: " + firstPlayer.getSplitHand().possibleValues());
         enterToContinue();
     }
     private void playerActionDouble() {
@@ -506,15 +512,7 @@ public class Game {
         } else
             playerSplitHand = "You do not have a split hand.\n";
         System.out.println(playerSplitHand);
-
-        if(currentState==State.PLAYER_ACTIONS){
-            firstPlayer.getCurrentHand().calculateActions();
-            if(dealerHand.getCurrentCards().get(0).handValue()==11&&firstPlayer.getCurrentHand().getCurrentCards().size()==2){
-                firstPlayer.getCurrentHand().addAction(Action.SURRENDER);
-            }
-            printPossibleActions();
-        }
-    }
+}
 
     private void printPossibleActions() {
         System.out.println("Pick an action:");
