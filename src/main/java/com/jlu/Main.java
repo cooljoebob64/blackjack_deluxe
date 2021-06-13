@@ -20,10 +20,12 @@ public class Main {
         String response = "";
         boolean inMenu = true;
 
+        clearScreen();
         drawLine();
         System.out.println("Welcome to Blackjack Deluxe!");
         enterToContinue();
         do {
+            clearScreen();
             drawLine();
             System.out.println("Enter which option you'd like:");
             System.out.println("""
@@ -37,6 +39,8 @@ public class Main {
                 case "1" -> {defaultGame();}
                 case "2" -> {customGame();}
                 case "Q", "q" -> {
+                    clearScreen();
+                    drawLine();
                     System.out.println("Quitting the game!");
                     inMenu = false;
                 }
@@ -52,7 +56,11 @@ public class Main {
 
     private static void drawLine(){
         // Provides a re-usable way to draw a graphical line in the console
-        System.out.println("================================================");
+        System.out.println("""
+                  +-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+-+-+-+ +-+-+-+-+
+                  |B|l|a|c|k|j|a|c|k| |D|e|l|u|x|e| |M|a|i|n| |M|e|n|u|
+                  +-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+-+-+-+ +-+-+-+-+
+                """);
     }
 
     private static void enterToContinue(){
