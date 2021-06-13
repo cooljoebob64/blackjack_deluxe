@@ -4,7 +4,14 @@ plugins {
 }
 
 group 'com.jlu'
-version '1.0-SNAPSHOT'
+version '1.0'
+
+apply plugin: 'application'
+mainClassName = 'com.jlu.Main.class'
+
+application {
+    mainClass = 'com.jlu.Main'
+}
 
 repositories {
     mavenCentral()
@@ -23,12 +30,14 @@ test {
     useJUnitPlatform()
 }
 
+java{
+    withJavadocJar()
+    withSourcesJar()
+}
+
 jar{
     manifest{
         attributes 'Main-Class':'com.jlu.Main'
     }
 }
 
-application {
-    mainClass = 'com.jlu.Main'
-}
