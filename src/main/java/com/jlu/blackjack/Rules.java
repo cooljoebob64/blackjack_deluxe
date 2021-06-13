@@ -42,7 +42,7 @@ public class Rules {
     }
 
     public String getFormattedRules(){
-        return "Current Rules:\n" +
+        return
                 "Insurance allowed: " + isInsurance() + "\n" +
                 "Insurance Payout: " + getInsurancePayout() + "\n" +
                 "Even Money allowed: " + isEvenMoney() + "\n" +
@@ -53,7 +53,7 @@ public class Rules {
                 "Dealer Hits on Soft 17: " + isDealerHitsSoft17() + "\n" +
                 "Blackjack Payout: " + getBlackjackPayout() + "\n" +
                 "Minimum Bet: " + getMinBet() + "\n" +
-                "Starting Bank: " + getStartingBank() +
+                "Starting Bank: " + getStartingBank() + "\n" +
                 "Cheat Mode: " + isCheatMode();
     }
 
