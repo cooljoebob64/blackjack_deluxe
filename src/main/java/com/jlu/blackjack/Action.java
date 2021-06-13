@@ -6,7 +6,8 @@ public enum Action {
     SPLIT("T"),
     DOUBLE("D"),
     SURRENDER("R"),
-    QUIT("Q");
+    QUIT("Q"),
+    GET_DECK_STATS("G");
 
     private final String commandLetter;
     Action(String commandLetter){

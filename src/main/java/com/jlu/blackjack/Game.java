@@ -193,6 +193,9 @@ public class Game {
                 && activeHand.getOwner().isOnFirstAction()){
             activeHand.addAction(Action.SURRENDER);
         }
+        if(currentRules.isCheatMode()) {
+            activeHand.addAction(Action.GET_DECK_STATS);
+        }
         boolean validChoice = false;
         do {
             printBoard();
@@ -202,11 +205,12 @@ public class Game {
             }
             System.out.println("(this is your " + isSplitHand + " hand)");
             System.out.println("What would you like to do?");
-            String response = myScanner.nextLine().toUpperCase(Locale.ROOT);
+            String response = myScanner.nextLine().substring(0,1).toUpperCase(Locale.ROOT);
             switch (response) {
                 case "H" -> {
                     if (firstPlayer.getCurrentHand().getActions().contains(Action.HIT)) {
                         playerActionHit();
+                        activeHand.getOwner().setOnFirstAction(false);
                         validChoice = true;
                     }
                 }
@@ -215,24 +219,36 @@ public class Game {
                         validChoice = true;
 
                         playerActionStand();
+                        activeHand.getOwner().setOnFirstAction(false);
                     }
                 }
                 case "T" -> {
                     if (firstPlayer.getCurrentHand().getActions().contains(Action.SPLIT)) {
                         playerActionSplit();
                         validChoice = true;
+                        activeHand.getOwner().setOnFirstAction(false);
                     }
                 }
                 case "D" -> {
                     if (firstPlayer.getCurrentHand().getActions().contains(Action.DOUBLE)) {
                         playerActionDouble();
                         validChoice = true;
+                        activeHand.getOwner().setOnFirstAction(false);
                     }
                 }
                 case "R" -> {
                     if (firstPlayer.getCurrentHand().getActions().contains(Action.SURRENDER)) {
                         playerActionSurrender();
                         validChoice = true;
+                        activeHand.getOwner().setOnFirstAction(false);
+                    }
+                }
+                case "G" -> {
+                    if(currentRules.isCheatMode()){
+                        printDeckStats();
+                        validChoice = true;
+                    } else{
+                        System.out.println("Cheat mode not enabled, nice try!");
                     }
                 }
                 case "Q" -> {
@@ -240,13 +256,24 @@ public class Game {
                     validChoice = true;
                 }
                 default -> {
-                    System.out.println("Invalid command!");
+                    System.out.println("Invalid command! Try again.");
+                    enterToContinue();
                     validChoice = false;
                 }
             }
 //            enterToContinue();
         } while(!validChoice);
-        activeHand.getOwner().setOnFirstAction(false);
+    }
+
+    private void printDeckStats(){
+        clearScreen();
+        drawLine();
+        System.out.println("Printing deck stats!");
+        System.out.println("Cards in shoe: " + deck.getCardsInShoe());
+        System.out.println("Next card to deal: " + deck.getPeekCard().cardName());
+//        System.out.println("All cards in shoe: " + deck.seeAllCardsInShoe());
+        System.out.println("Current shoe stack:" + deck.getCurrentShoe());
+        enterToContinue();
     }
 
     private void playerActionHit() {
@@ -506,6 +533,9 @@ public class Game {
         } else skipLines++;
         if(firstPlayer.getCurrentHand().getActions().contains(Action.SURRENDER)){
             System.out.println(Action.SURRENDER.commandLetter() +": Surrender");
+        } else skipLines++;
+        if(currentRules.isCheatMode()){
+            System.out.println(Action.GET_DECK_STATS.commandLetter() +": Get Deck Stats");
         } else skipLines++;
         System.out.println(Action.QUIT.commandLetter() +": Quit");
         for(int i=0; i<skipLines;i++){

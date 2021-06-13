@@ -5,6 +5,7 @@ import java.util.Stack;
 
 public class Deck {
 
+
     private final Stack<Card> currentShoe;
     private Rules gameRules;
 
@@ -106,4 +107,18 @@ public class Deck {
     }
 
 
+    public String seeAllCardsInShoe() {
+        StringBuilder allCards = new StringBuilder();
+        for(Card card : currentShoe){
+            allCards.append(card.cardName());
+            if(currentShoe.indexOf(card)!=currentShoe.size()-1){
+                allCards.append(", ");
+            }
+        }
+        return allCards.toString();
+    }
+
+    public Stack<Card> getCurrentShoe() {
+        return currentShoe;
+    }
 }
