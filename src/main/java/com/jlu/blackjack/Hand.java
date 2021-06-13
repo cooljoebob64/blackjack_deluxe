@@ -15,6 +15,7 @@ public class Hand {
         this.currentPossibleActions = new ArrayList<>();
         this.setMainHand(true);
         this.setTookEvenMoney(false);
+        this.setSurrendered(false);
     }
 
     /**
@@ -153,6 +154,12 @@ public class Hand {
     public void setTookEvenMoney(boolean tookEvenMoney) {
         this.tookEvenMoney = tookEvenMoney;
     }
+    public boolean isSurrendered() {
+        return surrendered;
+    }
+    public void setSurrendered(boolean surrendered) {
+        this.surrendered = surrendered;
+    }
 
     // Private fields
     private final List<Action> currentPossibleActions;
@@ -162,4 +169,5 @@ public class Hand {
     private boolean mainHand;
     private Participant owner;
     private boolean tookEvenMoney;
+    private boolean surrendered;
 }

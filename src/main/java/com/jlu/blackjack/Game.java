@@ -224,6 +224,13 @@ public class Game {
                         activeHand.getOwner().setOnFirstAction(false);
                     }
                 }
+                case "E" -> {
+                    if(firstPlayer.getCurrentHand().getActions().contains(Action.EVEN_MONEY)){
+                        playerActionEvenMoney();
+                        validChoice = true;
+                        activeHand.getOwner().setOnFirstAction(false);
+                    }
+                }
                 case "G" -> {
                     if(currentRules.isCheatMode()){
                         playerActionPrintDeckStats();
@@ -260,23 +267,46 @@ public class Game {
                 }
                 System.out.println("(this is your " + isMain + " hand)");
                 System.out.println("Highest value: " + hand.highestNonBust());
+                if(hand.isSurrendered()){
+                    System.out.println("You surrendered, and already got your money back.");
+                }
+                if(hand.isTookEvenMoney()){
+                    System.out.println("You took the Even Money option!");
+                }
                 int highValue = hand.highestNonBust();
                 int payoutAmount;
 
                 if(highValue==21&&hand.getCurrentCards().size()==2){ // Blackjack!
-                    payoutAmount = (int)Math.ceil(hand.getBetAmount() * currentRules.getBlackjackPayout())+hand.getBetAmount();
-                    System.out.println("Blackjack!");
-                    System.out.println("Bet: " + hand.getBetAmount());
-                    System.out.println("Blackjack payout: " + currentRules.getBlackjackPayout());
-                    System.out.println("You win: " + payoutAmount);
+
+                    if(hand.isTookEvenMoney()){ // Even money taken
+                        if(dealerValue==21&&dealerHand.getCurrentCards().size()==2){ // Both Blackjack
+                            System.out.println("Dealer also has Blackjack! You get Even Money!");
+                            System.out.println("Bet: " + hand.getBetAmount());
+                            payoutAmount = hand.getBetAmount();
+                            System.out.println("You win Even Money payout: " + payoutAmount);
+                        }
+                        else { // Player wins, took even money
+                            System.out.println("You win with Blackjack, but took even money.");
+                            System.out.println("Bet: " + hand.getBetAmount());
+                            payoutAmount = hand.getBetAmount() * 2;
+                            System.out.println("You win: " + payoutAmount);
+                        }
+                    }
+                    else { // Even Money not taken
+                        payoutAmount = (int) Math.ceil(hand.getBetAmount() * currentRules.getBlackjackPayout()) + hand.getBetAmount();
+                        System.out.println("Blackjack!");
+                        System.out.println("Bet: " + hand.getBetAmount());
+                        System.out.println("Blackjack payout: " + currentRules.getBlackjackPayout());
+                        System.out.println("You win: " + payoutAmount);
+                    }
                 } else if(highValue>21){ // Busted hand
                     System.out.println("This hand busted!");
                     System.out.println("House keeps your bet!");
                     payoutAmount = 0;
-                } else if(highValue>dealerValue||dealerValue>21){
+                } else if(highValue>dealerValue||dealerValue>21){ // Hand beats dealer
                     System.out.println("Your " + highValue + " beats the dealer!");
                     payoutAmount = 2* hand.getBetAmount();
-                } else if(highValue==dealerValue){
+                } else if(highValue==dealerValue){ // Push
                     System.out.println("You tied the dealer. Push!");
                     if(currentRules.getPushRule()==0){ // No action
                         System.out.println("No action. Bet refunded!");
@@ -288,7 +318,7 @@ public class Game {
                         System.out.println("Player loses the push!");
                         payoutAmount = 0;
                     }
-                } else {
+                } else { // Hand loses to dealer
                     System.out.println("Your " + highValue + " didn't beat the dealer. Sorry!");
                     payoutAmount = 0;
                 }
@@ -425,11 +455,23 @@ public class Game {
     private void playerActionSurrender() {
         utilityClearScreen();
         utilityDrawLine();
-        System.out.println("You surrender! Get back half your bet.");
+        System.out.println("You surrender! Get back half your bet (rounded down).");
         int surrenderReward = (int)Math.floor(activeHand.getBetAmount()*.5);
-        System.out.println("You get: $" + surrenderReward + " back.");
+        System.out.println("You get: " + surrenderReward + " back.");
         firstPlayer.pay(surrenderReward);
-        firstPlayer.setActive(false);
+        activeHand.clearBet();
+//        firstPlayer.setActive(false);
+        utilityEnterToContinue();
+    }
+    private void playerActionEvenMoney() {
+        utilityClearScreen();
+        utilityDrawLine();
+        System.out.println("You are taking the Even Money option!");
+        System.out.println("Your current hand: " + activeHand.getCurrentCards());
+        System.out.println("Current hand value: " + activeHand.highestNonBust());
+        System.out.println("If the dealer has a Blackjack, you will get your bet back.");
+        System.out.println("If you beat the dealer, you will win the regular (1:1) payout.");
+        activeHand.setTookEvenMoney(true);
         utilityEnterToContinue();
     }
     private void playerActionPrintDeckStats(){
@@ -521,6 +563,9 @@ public class Game {
         } else skipLines++;
         if(firstPlayer.getCurrentHand().getActions().contains(Action.SURRENDER)){
             System.out.println(Action.SURRENDER.commandLetter() +": Surrender");
+        } else skipLines++;
+        if(firstPlayer.getCurrentHand().getActions().contains(Action.EVEN_MONEY)){
+            System.out.println(Action.EVEN_MONEY.commandLetter() +": Take Even-Money Option");
         } else skipLines++;
         if(currentRules.isCheatMode()){
             System.out.println(Action.GET_DECK_STATS.commandLetter() +": Get Deck Stats");
