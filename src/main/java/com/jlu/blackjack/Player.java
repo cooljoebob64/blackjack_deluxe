@@ -14,6 +14,7 @@ public class Player implements Participant {
         this.bank = 0;
         this.setActive(true);
         this.hands = new ArrayList<>();
+        this.onFirstAction = true;
     }
 
     // Overridden methods from Participant
@@ -34,6 +35,14 @@ public class Player implements Participant {
             newHand(new Hand(currentRules));
         }
         return hands.get(0);
+    }
+    @Override
+    public boolean isOnFirstAction() {
+        return onFirstAction;
+    }
+    @Override
+    public void setOnFirstAction(boolean onFirstAction) {
+        this.onFirstAction = onFirstAction;
     }
 
     // Vanilla getters and setters
@@ -86,4 +95,7 @@ public class Player implements Participant {
     private int bank;
     private final List<Hand> hands;
     private boolean active;
+
+
+    private boolean onFirstAction;
 }

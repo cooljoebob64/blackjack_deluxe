@@ -22,6 +22,8 @@ public interface Participant {
      */
     Hand getCurrentHand();
 
+    boolean isOnFirstAction();
+    void setOnFirstAction(boolean onFirstAction);
 
 
 }
