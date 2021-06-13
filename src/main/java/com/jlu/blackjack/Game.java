@@ -61,13 +61,11 @@ public class Game {
         firstPlayer.setName("Player 1");
         players.add(firstPlayer);
         firstPlayer.setBank(currentRules.getStartingBank());
+
         dealer = new Dealer(currentRules);
-        deck = new Deck(currentRules);
-
-
         dealerHand = dealer.getCurrentHand();
 
-
+        deck = new Deck(currentRules);
     }
     private void mainLoop(){
 //        System.out.println("Main game loop.");
@@ -102,6 +100,7 @@ public class Game {
         utilityClearScreen();
         utilityDrawLine();
         System.out.println("Starting new round!");
+        utilityEnterToContinue();
         for(Player player:players){
             player.setActive(true);
             player.clearHands();
@@ -128,28 +127,38 @@ public class Game {
                 do{
                     utilityClearScreen();
                     utilityDrawLine();
+                    System.out.println(player.getName() + ": Your Bet.");
                     System.out.println("Your current bank: " + player.getBank());
                     System.out.println("How much would you like to bet on this hand?");
                     System.out.println("(Minimum bet: " + minBet + ")");
-                    System.out.print("Bet Amount: ");
+                    System.out.println("Bet Amount: (enter for minimum)");
                     String response = myScanner.nextLine();
-                    try{
-                        betAmount = Integer.parseInt(response);
-                        if(betAmount<minBet){
-                            System.out.println("Bet too low! Try again.");
-                            utilityEnterToContinue();
-                        } else if (betAmount>player.getBank()){
-                            System.out.println("Hey, you don't have that much! Try again.");
-                            utilityEnterToContinue();
-                        }else {
-                            player.bet(player.getCurrentHand(), betAmount);
-                            System.out.println("You are betting: " + player.getCurrentHand().getBetAmount());
-                            stillBetting = false;
-                        }
-                        awaitingInput = false;
-                    } catch(NumberFormatException e){
-                        System.out.println("That's not a valid number! Try that again...");
+                    if(response.isBlank()){
+                        betAmount = minBet;
+                        player.bet(player.getCurrentHand(), betAmount);
+                        System.out.println("You are betting the minimum: " + player.getCurrentHand().getBetAmount());
                         utilityEnterToContinue();
+                        stillBetting = false;
+                        awaitingInput = false;
+                    } else {
+                        try {
+                            betAmount = Integer.parseInt(response);
+                            if (betAmount < minBet) {
+                                System.out.println("Bet too low! Try again.");
+                                utilityEnterToContinue();
+                            } else if (betAmount > player.getBank()) {
+                                System.out.println("Hey, you don't have that much! Try again.");
+                                utilityEnterToContinue();
+                            } else {
+                                player.bet(player.getCurrentHand(), betAmount);
+                                System.out.println("You are betting: " + player.getCurrentHand().getBetAmount());
+                                stillBetting = false;
+                            }
+                            awaitingInput = false;
+                        } catch (NumberFormatException e) {
+                            System.out.println("That's not a valid number! Try that again...");
+                            utilityEnterToContinue();
+                        }
                     }
                 } while(awaitingInput);
             } while(stillBetting);
@@ -168,94 +177,174 @@ public class Game {
         // Get the native hand actions
         activeHand.clearActions();
         activeHand.calculateActions();
+
         // If dealer shows an Ace and player has taken no actions, allow a Surrender
         if(dealerHand.getCurrentCards().get(0).handValue()==11
                 && activeHand.getOwner().isOnFirstAction()){ // Surrender possibility
             activeHand.addAction(Action.SURRENDER);
         }
+
         // If player has blackjack, and dealer shows Ace, allow Even Money possibility
         if(activeHand.getOwner().isOnFirstAction()&&activeHand.highestNonBust()==21&& currentRules.isEvenMoney()){ // Even Money possibility
             activeHand.addAction(Action.EVEN_MONEY);
         }
+
+        // If the dealer is showing an Ace, allow the player to buy Insurance
+        if(activeHand.getOwner().isOnFirstAction()  &&
+                currentRules.isInsurance() &&
+                dealerHand.getCurrentCards().get(0).handValue()==11){
+            activeHand.addAction(Action.INSURANCE);
+        }
+
         // Add options available in Cheat Mode
         if(currentRules.isCheatMode()) {
             activeHand.addAction(Action.GET_DECK_STATS);
         }
+
         boolean validChoice = false;
         do {
             utilityPrintBoard();
             utilityPrintPossibleActions();
-            String isSplitHand = "main";
-            if(!activeHand.isMainHand()){
-                isSplitHand = "split";
-            }
+            String isSplitHand = activeHand.isMainHand() ? "main" : "split";
             System.out.println("(this is your " + isSplitHand + " hand)");
             System.out.println("What would you like to do?");
-            String response = myScanner.nextLine().substring(0,1).toUpperCase(Locale.ROOT);
-            switch (response) {
-                case "H" -> {
-                    if (firstPlayer.getCurrentHand().getActions().contains(Action.HIT)) {
-                        playerActionHit();
-                        activeHand.getOwner().setOnFirstAction(false);
-                        validChoice = true;
+            String response = myScanner.nextLine();
+            if(response.isEmpty()){
+                System.out.println("Invalid command! Try again.");
+                utilityEnterToContinue();
+                validChoice = false;
+            } else {
+                response = response.substring(0,1).toUpperCase(Locale.ROOT);
+                switch (response) {
+                    case "H" -> {
+                        if (firstPlayer.getCurrentHand().getActions().contains(Action.HIT)) {
+                            playerActionHit();
+                            activeHand.getOwner().setOnFirstAction(false);
+                            validChoice = true;
+                        }
                     }
-                }
-                case "S" -> {
-                    if (firstPlayer.getCurrentHand().getActions().contains(Action.STAND)) {
-                        validChoice = true;
+                    case "S" -> {
+                        if (firstPlayer.getCurrentHand().getActions().contains(Action.STAND)) {
+                            validChoice = true;
 
-                        playerActionStand();
-                        activeHand.getOwner().setOnFirstAction(false);
+                            playerActionStand();
+                            activeHand.getOwner().setOnFirstAction(false);
+                        }
                     }
-                }
-                case "T" -> {
-                    if (firstPlayer.getCurrentHand().getActions().contains(Action.SPLIT)) {
-                        playerActionSplit();
+                    case "I" -> {
+                        if (firstPlayer.getCurrentHand().getActions().contains(Action.INSURANCE)) {
+                            validChoice = true;
+                            playerActionInsurance();
+                        }
+                    }
+                    case "T" -> {
+                        if (firstPlayer.getCurrentHand().getActions().contains(Action.SPLIT)) {
+                            playerActionSplit();
+                            validChoice = true;
+                            activeHand.getOwner().setOnFirstAction(false);
+                        }
+                    }
+                    case "D" -> {
+                        if (firstPlayer.getCurrentHand().getActions().contains(Action.DOUBLE)) {
+                            playerActionDouble();
+                            validChoice = true;
+                            activeHand.getOwner().setOnFirstAction(false);
+                        }
+                    }
+                    case "R" -> {
+                        if (firstPlayer.getCurrentHand().getActions().contains(Action.SURRENDER)) {
+                            playerActionSurrender();
+                            validChoice = true;
+                            activeHand.getOwner().setOnFirstAction(false);
+                        }
+                    }
+                    case "E" -> {
+                        if(firstPlayer.getCurrentHand().getActions().contains(Action.EVEN_MONEY)){
+                            playerActionEvenMoney();
+                            validChoice = true;
+                            activeHand.getOwner().setOnFirstAction(false);
+                        }
+                    }
+                    case "G" -> {
+                        if(currentRules.isCheatMode()){
+                            playerActionPrintDeckStats();
+                            validChoice = true;
+                        } else{
+                            System.out.println("Cheat mode not enabled, nice try!");
+                        }
+                    }
+                    case "Q" -> {
+                        playerActionQuit();
                         validChoice = true;
-                        activeHand.getOwner().setOnFirstAction(false);
                     }
-                }
-                case "D" -> {
-                    if (firstPlayer.getCurrentHand().getActions().contains(Action.DOUBLE)) {
-                        playerActionDouble();
-                        validChoice = true;
-                        activeHand.getOwner().setOnFirstAction(false);
+                    default -> {
+                        System.out.println("Invalid command! Try again.");
+                        utilityEnterToContinue();
+                        validChoice = false;
                     }
-                }
-                case "R" -> {
-                    if (firstPlayer.getCurrentHand().getActions().contains(Action.SURRENDER)) {
-                        playerActionSurrender();
-                        validChoice = true;
-                        activeHand.getOwner().setOnFirstAction(false);
-                    }
-                }
-                case "E" -> {
-                    if(firstPlayer.getCurrentHand().getActions().contains(Action.EVEN_MONEY)){
-                        playerActionEvenMoney();
-                        validChoice = true;
-                        activeHand.getOwner().setOnFirstAction(false);
-                    }
-                }
-                case "G" -> {
-                    if(currentRules.isCheatMode()){
-                        playerActionPrintDeckStats();
-                        validChoice = true;
-                    } else{
-                        System.out.println("Cheat mode not enabled, nice try!");
-                    }
-                }
-                case "Q" -> {
-                    playerActionQuit();
-                    validChoice = true;
-                }
-                default -> {
-                    System.out.println("Invalid command! Try again.");
-                    utilityEnterToContinue();
-                    validChoice = false;
                 }
             }
 //            enterToContinue();
         } while(!validChoice);
+    }
+    private void stateDealerReveal(){
+        utilityClearScreen();
+        utilityDrawLine();
+        System.out.println("Dealer reveals their hand: ");
+        System.out.println(dealerHand.cardsToString());
+        System.out.println("Initial hand value: " + dealerHand.highestNonBust());
+        // Check dealer blackjack for insurance payout
+        if(dealerHand.highestNonBust()==21 && dealerHand.getCurrentCards().size()==2 && currentRules.isInsurance()){
+            for(Player player: players){
+                for (Hand hand:player.getAllHands()){
+                    if(hand.getInsuranceAmount()>0){
+                        String isMain = hand.isMainHand()?"main":"split";
+                        System.out.println(player.getName() +", the dealer had Blackjack, and you had insurance on " +
+                                "your "+ isMain +" hand!");
+                        System.out.println("Insurance amount: " + hand.getInsuranceAmount());
+                        System.out.println("Insurance payout rate: " + currentRules.getInsurancePayout());
+                        int insuranceReward = (int)Math.floor(hand.getInsuranceAmount() * currentRules.getInsurancePayout());
+                        System.out.println("You get: " + insuranceReward + " immediately!");
+                        player.pay(insuranceReward);
+                        utilityEnterToContinue();
+                    }
+                }
+            }
+        }
+        System.out.println("Dealer will play now!");
+        utilityEnterToContinue();
+        this.currentState = State.DEALER_UP;
+    }
+    private void stateDealerUp(){
+        utilityClearScreen();
+        utilityDrawLine();
+        Hand dealerHand = dealer.getCurrentHand();
+        System.out.println("Dealer's starting hand: " + dealerHand.cardsToString());
+        boolean keepDealing = true;
+        do {
+            int dealerValue = dealerHand.highestNonBust();
+            if (dealerValue > 21) {
+                dealerActionBust();
+                keepDealing = false;
+            } else if(dealerValue>17){
+                dealerActionStand();
+                keepDealing = false;
+            } else {
+                if(dealerValue==17) {
+                    if((currentRules.isDealerHitsSoft17()&&dealerHand.possibleValuesNonBust().size()>1)){
+                        dealerActionHit();
+                    } else {
+                        dealerActionStand();
+                        keepDealing = false;
+                    }
+                } else {
+                    dealerActionHit();
+                }
+            }
+//            System.out.println("Dealer's hand: " + enumerateDealerCards() + ", highest value: " + dealerHand.highestNonBust());
+            utilityEnterToContinue();
+        } while(keepDealing);
+        this.currentState = State.PAYOUT;
     }
     private void statePayout(){
         utilityClearScreen();
@@ -348,47 +437,6 @@ public class Game {
 //        enterToContinue();
         this.currentState = State.PRE_DEAL;
     }
-    private void stateDealerReveal(){
-        utilityClearScreen();
-        utilityDrawLine();
-        System.out.println("Dealer reveals their hand: ");
-        System.out.println(dealerHand.cardsToString());
-        System.out.println("Initial hand value: " + dealerHand.highestNonBust());
-        System.out.println("Dealer will play now!");
-        utilityEnterToContinue();
-        this.currentState = State.DEALER_UP;
-    }
-    private void stateDealerUp(){
-        utilityClearScreen();
-        utilityDrawLine();
-        Hand dealerHand = dealer.getCurrentHand();
-        System.out.println("Dealer's starting hand: " + dealerHand.cardsToString());
-        boolean keepDealing = true;
-        do {
-            int dealerValue = dealerHand.highestNonBust();
-            if (dealerValue > 21) {
-                dealerActionBust();
-                keepDealing = false;
-            } else if(dealerValue>17){
-                dealerActionStand();
-                keepDealing = false;
-            } else {
-                if(dealerValue==17) {
-                    if((currentRules.isDealerHitsSoft17()&&dealerHand.possibleValuesNonBust().size()>1)){
-                        dealerActionHit();
-                    } else {
-                        dealerActionStand();
-                        keepDealing = false;
-                    }
-                } else {
-                    dealerActionHit();
-                }
-            }
-//            System.out.println("Dealer's hand: " + enumerateDealerCards() + ", highest value: " + dealerHand.highestNonBust());
-            utilityEnterToContinue();
-        } while(keepDealing);
-        this.currentState = State.PAYOUT;
-    }
 
     private void playerActionHit() {
         utilityClearScreen();
@@ -466,6 +514,17 @@ public class Game {
         firstPlayer.pay(surrenderReward);
         activeHand.clearBet();
 //        firstPlayer.setActive(false);
+        utilityEnterToContinue();
+    }
+    private void playerActionInsurance() {
+        utilityClearScreen();
+        utilityDrawLine();
+        System.out.println("You've opted for insurance! This costs half of your original bet.");
+        int insuranceAmount = (int)Math.floor(activeHand.getBetAmount()*.5);
+        System.out.println("Insurance cost: " + insuranceAmount);
+        firstPlayer.pay(-insuranceAmount);
+        activeHand.setInsuranceAmount(insuranceAmount);
+        System.out.println("Your new bank: " + firstPlayer.getBank());
         utilityEnterToContinue();
     }
     private void playerActionEvenMoney() {
@@ -553,32 +612,43 @@ public class Game {
 }
     private void utilityPrintPossibleActions() {
         System.out.println("Pick an action:");
-        int skipLines = 0;
-        if(firstPlayer.getCurrentHand().getActions().contains(Action.STAND)){
+//        int skipLines = 0;
+        if(activeHand.getActions().contains(Action.STAND)){
             System.out.println(Action.STAND.commandLetter() +": Stand");
-        } else skipLines++;
-        if(firstPlayer.getCurrentHand().getActions().contains(Action.HIT)){
+        }
+//        else skipLines++;
+        if(activeHand.getActions().contains(Action.HIT)){
             System.out.println(Action.HIT.commandLetter() +": Hit");
-        } else skipLines++;
-        if(firstPlayer.getCurrentHand().getActions().contains(Action.DOUBLE)){
+        }
+//        else skipLines++;
+        if(activeHand.getActions().contains(Action.DOUBLE)){
             System.out.println(Action.DOUBLE.commandLetter() +": Double Down");
-        } else skipLines++;
-        if(firstPlayer.getCurrentHand().getActions().contains(Action.SPLIT)){
+        }
+//        else skipLines++;
+        if(activeHand.getActions().contains(Action.SPLIT)){
             System.out.println(Action.SPLIT.commandLetter() +": Split");
-        } else skipLines++;
-        if(firstPlayer.getCurrentHand().getActions().contains(Action.SURRENDER)){
+        }
+//        else skipLines++;
+        if(activeHand.getActions().contains(Action.SURRENDER)){
             System.out.println(Action.SURRENDER.commandLetter() +": Surrender");
-        } else skipLines++;
-        if(firstPlayer.getCurrentHand().getActions().contains(Action.EVEN_MONEY)){
+        }
+//        else skipLines++;
+        if(activeHand.getActions().contains(Action.INSURANCE)){
+            System.out.println(Action.INSURANCE.commandLetter() +": Buy Insurance");
+        }
+//        else skipLines++;
+        if(activeHand.getActions().contains(Action.EVEN_MONEY)){
             System.out.println(Action.EVEN_MONEY.commandLetter() +": Take Even-Money Option");
-        } else skipLines++;
+        }
+//        else skipLines++;
         if(currentRules.isCheatMode()){
             System.out.println(Action.GET_DECK_STATS.commandLetter() +": Get Deck Stats");
-        } else skipLines++;
-        System.out.println(Action.QUIT.commandLetter() +": Quit");
-        for(int i=0; i<skipLines;i++){
-            System.out.println();
         }
+//        else skipLines++;
+        System.out.println(Action.QUIT.commandLetter() +": Quit");
+//        for(int i=0; i<skipLines;i++){
+//            System.out.println();
+//        }
     }
     private String utilityEnumerateDealerCards() {
         List<Card> dealerCards = dealer.getCurrentHand().getCurrentCards();

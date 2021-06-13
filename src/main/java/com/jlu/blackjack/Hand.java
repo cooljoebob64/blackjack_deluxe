@@ -93,8 +93,9 @@ public class Hand {
      * Adds an arbitrary action to the list, such as Surrender
      * @param newAction Action to be added to the list
      */
-    public void addAction(Action newAction){}
-
+    public void addAction(Action newAction){
+        currentPossibleActions.add(newAction);
+    }
 
     // Complex getters and setters
     public void addCard(Card newCard){
@@ -160,6 +161,12 @@ public class Hand {
     public void setSurrendered(boolean surrendered) {
         this.surrendered = surrendered;
     }
+    public int getInsuranceAmount() {
+        return insuranceAmount;
+    }
+    public void setInsuranceAmount(int insuranceAmount) {
+        this.insuranceAmount = insuranceAmount;
+    }
 
     // Private fields
     private final List<Action> currentPossibleActions;
@@ -170,4 +177,5 @@ public class Hand {
     private Participant owner;
     private boolean tookEvenMoney;
     private boolean surrendered;
+    private int insuranceAmount;
 }

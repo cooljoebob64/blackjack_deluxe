@@ -6,6 +6,7 @@ public enum Action {
     SPLIT("T"),
     DOUBLE("D"),
     SURRENDER("R"),
+    INSURANCE("I"),
     EVEN_MONEY("E"),
     GET_DECK_STATS("G"),
     QUIT("Q");

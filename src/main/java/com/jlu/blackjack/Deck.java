@@ -74,6 +74,7 @@ public class Deck {
         Card dealCard = currentShoe.pop();
         int initialSize = gameRules.getDecksToLoad()*52;
         if(currentShoe.size()< initialSize-(gameRules.getPenetration()*(initialSize))){
+            System.out.println("Reloading shoe!");
             reloadShoe();
         }
         return dealCard;
