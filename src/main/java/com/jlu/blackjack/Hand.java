@@ -14,6 +14,7 @@ public class Hand {
         this.setCurrentCards(new ArrayList<>());
         this.currentPossibleActions = new ArrayList<>();
         this.setMainHand(true);
+        this.setTookEvenMoney(false);
     }
 
     /**
@@ -146,6 +147,12 @@ public class Hand {
     public void setOwner(Participant owner) {
         this.owner = owner;
     }
+    public boolean isTookEvenMoney() {
+        return tookEvenMoney;
+    }
+    public void setTookEvenMoney(boolean tookEvenMoney) {
+        this.tookEvenMoney = tookEvenMoney;
+    }
 
     // Private fields
     private final List<Action> currentPossibleActions;
@@ -154,4 +161,5 @@ public class Hand {
     private List<Card> currentCards;
     private boolean mainHand;
     private Participant owner;
+    private boolean tookEvenMoney;
 }
