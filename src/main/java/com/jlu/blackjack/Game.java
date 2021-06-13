@@ -136,11 +136,14 @@ public class Game {
                     try{
                         betAmount = Integer.parseInt(response);
                         if(betAmount<minBet){
-                            System.out.println("Bet too low or invalid! Try again.");
+                            System.out.println("Bet too low! Try again.");
+                            utilityEnterToContinue();
                         } else if (betAmount>player.getBank()){
                             System.out.println("Hey, you don't have that much! Try again.");
+                            utilityEnterToContinue();
                         }else {
                             player.bet(player.getCurrentHand(), betAmount);
+                            System.out.println("You are betting: " + player.getCurrentHand().getBetAmount());
                             stillBetting = false;
                         }
                         awaitingInput = false;
