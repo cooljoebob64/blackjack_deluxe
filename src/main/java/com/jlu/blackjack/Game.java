@@ -167,12 +167,14 @@ public class Game {
         activeHand.calculateActions();
         // If dealer shows an Ace and player has taken no actions, allow a Surrender
         if(dealerHand.getCurrentCards().get(0).handValue()==11
-                && activeHand.getOwner().isOnFirstAction()){
+                && activeHand.getOwner().isOnFirstAction()){ // Surrender possibility
             activeHand.addAction(Action.SURRENDER);
         }
-        if(activeHand.getOwner().isOnFirstAction()&&activeHand.highestNonBust()==21){
+        // If player has blackjack, and dealer shows Ace, allow Even Money possibility
+        if(activeHand.getOwner().isOnFirstAction()&&activeHand.highestNonBust()==21&& currentRules.isEvenMoney()){ // Even Money possibility
             activeHand.addAction(Action.EVEN_MONEY);
         }
+        // Add options available in Cheat Mode
         if(currentRules.isCheatMode()) {
             activeHand.addAction(Action.GET_DECK_STATS);
         }
