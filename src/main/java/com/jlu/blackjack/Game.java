@@ -170,6 +170,9 @@ public class Game {
                 && activeHand.getOwner().isOnFirstAction()){
             activeHand.addAction(Action.SURRENDER);
         }
+        if(activeHand.getOwner().isOnFirstAction()&&activeHand.highestNonBust()==21){
+            activeHand.addAction(Action.EVEN_MONEY);
+        }
         if(currentRules.isCheatMode()) {
             activeHand.addAction(Action.GET_DECK_STATS);
         }
