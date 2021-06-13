@@ -20,9 +20,10 @@ This application is a work in progress. Check back soon for updates!
 - [Acknowledgements](#-acknowledgements)
 
 ## 🌟 Features
-- Accurate gameplay rules
+- Accurate Blackjack gameplay rules
 - Text-based console interface
 - Fully customizable rule set, including shoe size, insurance, surrenders, payouts, and dealer soft-17s
+- Various difficulty modes built in
 
 ## 📦 Installation
 - Make sure to have [JRE version 15 or 16](https://www.oracle.com/java/technologies/javase-downloads.html#JDK16) installed
