@@ -22,7 +22,6 @@ public class Game {
     private boolean keepPlaying;
     private Player firstPlayer;
     private Dealer dealer;
-    private final int STARTING_BANK = 50;
     private Deck deck;
     private Hand activeHand;
     private Hand dealerHand;
@@ -65,7 +64,7 @@ public class Game {
         firstPlayer = new Player(currentRules);
         firstPlayer.setName("Player 1");
         players.add(firstPlayer);
-        firstPlayer.setBank(STARTING_BANK);
+        firstPlayer.setBank(currentRules.getStartingBank());
         dealer = new Dealer(currentRules);
         deck = new Deck(currentRules);
 

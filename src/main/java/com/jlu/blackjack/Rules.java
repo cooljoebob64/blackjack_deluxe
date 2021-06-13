@@ -52,7 +52,9 @@ public class Rules {
                 "Push Rule: " + PushRuleOptions.values()[getPushRule()] + "\n" +
                 "Dealer Hits on Soft 17: " + isDealerHitsSoft17() + "\n" +
                 "Blackjack Payout: " + getBlackjackPayout() + "\n" +
-                "Minimum Bet: " + getMinBet() + "\n";
+                "Minimum Bet: " + getMinBet() + "\n" +
+                "Starting Bank: " + getStartingBank() +
+                "Cheat Mode: " + isCheatMode();
     }
 
     public boolean isInsurance() {
