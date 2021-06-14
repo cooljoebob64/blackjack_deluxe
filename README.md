@@ -26,9 +26,12 @@ This application is a work in progress. Check back soon for updates!
 - Various difficulty modes built-in via pre-set rule configurations
 
 ## 📦 Installation
+### Building from source
 - Make sure to have [JRE version 15 or 16](https://www.oracle.com/java/technologies/javase-downloads.html#JDK16) installed
 - Clone the repository to your machine
-- This repository currently does not automatically build a package. That is coming soon!
+### Release version
+- The latest release is available on the [GitHub Page](https://github.com/cooljoebob64/blackjack_deluxe), and once extracted, can be run by executing the batch file in the 
+`bin` directory.
 
 ## 🚀 Usage
 - If you have Gradle installed globally, you can run the program in your terminal by navigating to the project directory, and running the command 
@@ -78,3 +81,5 @@ public class Deck {
 
 ## 📑 License
 [MIT](https://choosealicense.com/licenses/mit/)
+
+GitHub Link: https://github.com/cooljoebob64/blackjack_deluxe
