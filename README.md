@@ -29,14 +29,17 @@ This application is a work in progress. Check back soon for updates!
 ### Building from source
 - Make sure to have [JRE version 15 or 16](https://www.oracle.com/java/technologies/javase-downloads.html#JDK16) installed
 - Clone the repository to your machine
+- Build via Gradle with `gradle build`
 ### Release version
-- The latest release is available on the [GitHub Page](https://github.com/cooljoebob64/blackjack_deluxe), and once extracted, can be run by executing the batch file in the 
-`bin` directory.
+- The latest release is available on the [GitHub Page](https://github.com/cooljoebob64/blackjack_deluxe)
 
 ## 🚀 Usage
+### Source Build
 - If you have Gradle installed globally, you can run the program in your terminal by navigating to the project directory, and running the command 
   `gradle --console plain run`
 - You can also run the Main class in your Java IDE of choice
+### Release Version
+- Once extracted, the application can be executed by running  the batch file in the `bin` directory.
 
 ## 💻 Technologies
 - [Java JDK 15](https://www.oracle.com/java/technologies/javase/jdk15-archive-downloads.html)
