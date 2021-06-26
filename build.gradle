@@ -39,5 +39,8 @@ jar{
     manifest{
         attributes 'Main-Class':'com.jlu.Main'
     }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
