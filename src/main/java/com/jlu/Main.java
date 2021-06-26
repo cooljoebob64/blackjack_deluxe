@@ -10,14 +10,23 @@ import com.jlu.clihelper.CLIHelper;
 //import CLIHelper;
 
 public class Main {
+
+    static CLIHelper cli;
+
+    static String bannerText = """
+                \s\s+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+ +-+-+-+-+ +-+-+-+-+
+                \s\s|B|l|a|c|k|j|a|c|k| |D|e|l|u|x|e| |-| |M|a|i|n| |M|e|n|u|
+                \s\s+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+ +-+-+-+-+ +-+-+-+-+
+                """;
+
     /**
      * Main class which starts the game and interacts with the user.
      * @param args Arguments provided at run time
      */
-
-    CLIHelper cli;
-
     public static void main(String[] args){
+
+        setupCLI();
+
         myScanner = new Scanner(System.in);
         String response = "";
         boolean inMenu = true;
@@ -51,6 +60,13 @@ public class Main {
             }
         } while(inMenu);
         System.out.println("End of program.");
+    }
+
+    private static void setupCLI() {
+        cli = CLIHelper.getInstance();
+        cli.setLine(bannerText);
+        cli.setConsoleSizeTo(15);
+        cli.setScanner(myScanner);
     }
 
     private static void defaultGame() {
