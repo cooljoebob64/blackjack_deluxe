@@ -56,6 +56,7 @@ public class RulesBuilder {
         return hardRules;
     }
     public static Rules buildCustomRules(CLIHelper cli) {
+        String oldBanner = cli.getLine();
         cli.setLine(bannerText);
 
         Rules customRules = new Rules();
@@ -454,10 +455,12 @@ public class RulesBuilder {
 
         cli.nicePrint("Custom rules complete!");
         cli.enterToContinue();
+        cli.setLine(oldBanner);
         return customRules;
     }
 
     public static void previewRules(Rules potentialRules, CLIHelper cli){
+        String oldBanner = cli.getLine();
         cli.setLine(bannerText);
         boolean awaitingInput = true;
         String response = "";
@@ -485,5 +488,6 @@ public class RulesBuilder {
                 cli.enterToContinue();
             }
         } while (awaitingInput);
+        cli.setLine(oldBanner);
     }
 }
