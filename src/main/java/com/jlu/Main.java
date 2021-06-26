@@ -2,12 +2,10 @@ package com.jlu;
 
 import com.jlu.blackjack.RulesBuilder;
 import com.jlu.blackjack.Game;
+import com.jlu.clihelper.CLIHelper;
 
 import java.util.Scanner;
 
-import com.jlu.clihelper.CLIHelper;
-
-//import CLIHelper;
 
 public class Main {
 
@@ -25,41 +23,34 @@ public class Main {
      */
     public static void main(String[] args){
 
+        myScanner = new Scanner(System.in);
         setupCLI();
 
-        myScanner = new Scanner(System.in);
         String response = "";
         boolean inMenu = true;
 
-        clearScreen();
-        drawLine();
-        System.out.println("Welcome to Blackjack Deluxe!");
-        enterToContinue();
+        cli.nicePrint("Welcome to Blackjack Deluxe!");
+        cli.enterToContinue();
         do {
-            clearScreen();
-            drawLine();
-            System.out.println("Enter which option you'd like:");
-            System.out.println("""
-                    1: New Game with Default Rules
-                    2: New Game with Custom Rules
-                    Q: Quit""");
+            cli.nicePrint(new String[]{"Enter which option you'd like:",
+                    "1: New Game with Default Rules",
+                    "2: New Game with Custom Rules",
+                    "Q: Quit"});
             response = myScanner.nextLine();
             switch (response){
                 case "1" -> {defaultGame();}
                 case "2" -> {customGame();}
                 case "Q", "q" -> {
-                    clearScreen();
-                    drawLine();
-                    System.out.println("Quitting the game!");
+                    cli.nicePrint("Quitting the game!");
                     inMenu = false;
                 }
                 default -> {
-                    System.out.println("Unrecognized input, try again!");
-                    enterToContinue();
+                    cli.nicePrint("Unrecognized input, try again!");
+                    cli.enterToContinue();
                 }
             }
         } while(inMenu);
-        System.out.println("End of program.");
+        cli.nicePrint("End of program.");
     }
 
     private static void setupCLI() {
@@ -81,14 +72,12 @@ public class Main {
         String response = "";
 
         do {
-            clearScreen();
-            drawLine();
-            System.out.println("Which rule set would you like to use?");
-            System.out.println("(Enter a number and press enter)");
-            System.out.println("1. Default Rules");
-            System.out.println("2. Easy Rules");
-            System.out.println("3. Hard Rules");
-            System.out.println("0. Custom Rules");
+            cli.nicePrint(new String[]{"Which rule set would you like to use?",
+                    "(Enter a number and press enter)",
+                    "1. Default Rules",
+                    "2. Easy Rules",
+                    "3. Hard Rules",
+                    "0. Custom Rules"});
 
             int selection;
             response = myScanner.nextLine();
@@ -96,33 +85,36 @@ public class Main {
                 selection = Integer.parseInt(response);
                 switch (selection){
                     case 1 -> {
-                        System.out.println("Default rules selected!");
-                        enterToContinue();
+                        cli.nicePrint("Default rules selected!");
+                        cli.enterToContinue();
                         RulesBuilder.previewRules(RulesBuilder.buildDefaultRules());
                         awaitingInput = false;
                     }
                     case 2 -> {
-                        System.out.println("Easy rules selected!");
+                        cli.nicePrint("Easy rules selected!");
+                        cli.enterToContinue();
                         RulesBuilder.previewRules(RulesBuilder.buildEZRules());
                         awaitingInput = false;
                     }
                     case 3 -> {
-                        System.out.println("Hard rules selected!");
+                        cli.nicePrint("Hard rules selected!");
+                        cli.enterToContinue();
                         RulesBuilder.previewRules(RulesBuilder.buildHardRules());
                         awaitingInput = false;
                     }
                     case 0 -> {
-                        System.out.println("Custom rules selected!");
+                        cli.nicePrint("Custom rules selected!");
+                        cli.enterToContinue();
                         RulesBuilder.previewRules(RulesBuilder.buildCustomRules());
                         awaitingInput = false;
                     }
                     default -> {
-                        System.out.println("Invalid option! Try again.");
-                        enterToContinue();
+                        cli.nicePrint("Invalid option! Try again.");
+                        cli.enterToContinue();
                     }
                 }
             } catch (NumberFormatException e){
-                System.out.println("Invalid option! Try again!");
+                cli.nicePrint("Invalid option! Try again!");
                 enterToContinue();
             }
         } while (awaitingInput);
