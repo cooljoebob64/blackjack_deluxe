@@ -5,11 +5,18 @@ import com.jlu.blackjack.Game;
 
 import java.util.Scanner;
 
+import com.jlu.clihelper.CLIHelper;
+
+//import CLIHelper;
+
 public class Main {
     /**
      * Main class which starts the game and interacts with the user.
      * @param args Arguments provided at run time
      */
+
+    CLIHelper cli;
+
     public static void main(String[] args){
         myScanner = new Scanner(System.in);
         String response = "";
