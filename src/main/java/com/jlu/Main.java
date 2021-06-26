@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Main {
 
     static CLIHelper cli;
-
+    static final int CONSOLE_SIZE = 10;
     static String bannerText = """
                 \s\s+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+ +-+-+-+-+ +-+-+-+-+
                 \s\s|B|l|a|c|k|j|a|c|k| |D|e|l|u|x|e| |-| |M|a|i|n| |M|e|n|u|
@@ -35,11 +35,13 @@ public class Main {
             cli.nicePrint(new String[]{"Enter which option you'd like:",
                     "1: New Game with Default Rules",
                     "2: New Game with Custom Rules",
+                    "C: Calibrate Console Size",
                     "Q: Quit"});
             response = myScanner.nextLine();
             switch (response){
                 case "1" -> {defaultGame();}
                 case "2" -> {customGame();}
+                case "C", "c" -> {cli.calibrateConsoleSize();}
                 case "Q", "q" -> {
                     cli.nicePrint("Quitting the game!");
                     inMenu = false;
@@ -56,7 +58,7 @@ public class Main {
     private static void setupCLI() {
         cli = CLIHelper.getInstance();
         cli.setLine(bannerText);
-        cli.setConsoleSizeTo(15);
+        cli.setConsoleSizeTo(CONSOLE_SIZE);
         cli.setScanner(myScanner);
     }
 
@@ -87,25 +89,25 @@ public class Main {
                     case 1 -> {
                         cli.nicePrint("Default rules selected!");
                         cli.enterToContinue();
-                        RulesBuilder.previewRules(RulesBuilder.buildDefaultRules());
+                        RulesBuilder.previewRules(RulesBuilder.buildDefaultRules(), cli);
                         awaitingInput = false;
                     }
                     case 2 -> {
                         cli.nicePrint("Easy rules selected!");
                         cli.enterToContinue();
-                        RulesBuilder.previewRules(RulesBuilder.buildEZRules());
+                        RulesBuilder.previewRules(RulesBuilder.buildEZRules(), cli);
                         awaitingInput = false;
                     }
                     case 3 -> {
                         cli.nicePrint("Hard rules selected!");
                         cli.enterToContinue();
-                        RulesBuilder.previewRules(RulesBuilder.buildHardRules());
+                        RulesBuilder.previewRules(RulesBuilder.buildHardRules(), cli);
                         awaitingInput = false;
                     }
                     case 0 -> {
                         cli.nicePrint("Custom rules selected!");
                         cli.enterToContinue();
-                        RulesBuilder.previewRules(RulesBuilder.buildCustomRules());
+                        RulesBuilder.previewRules(RulesBuilder.buildCustomRules(cli), cli);
                         awaitingInput = false;
                     }
                     default -> {
@@ -115,7 +117,7 @@ public class Main {
                 }
             } catch (NumberFormatException e){
                 cli.nicePrint("Invalid option! Try again!");
-                enterToContinue();
+                cli.enterToContinue();
             }
         } while (awaitingInput);
     }
