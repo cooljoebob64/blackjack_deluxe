@@ -486,22 +486,4 @@ public class RulesBuilder {
             }
         } while (awaitingInput);
     }
-
-    private static void drawLine(){
-        // Provides a re-usable way to draw a graphical line in the console
-        System.out.println("""
-              \s\s+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+ +-+-+-+-+ +-+-+-+-+-+-+-+
-              \s\s|B|l|a|c|k|j|a|c|k| |D|e|l|u|x|e| |-| |R|u|l|e| |B|u|i|l|d|e|r|
-              \s\s+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+ +-+-+-+-+ +-+-+-+-+-+-+-+
-                """);
-    }
-    private static void enterToContinue(){
-        // Prompts the user to press enter before continuing
-        System.out.println("Press Enter to continue...");
-        myScanner.nextLine();
-    }
-    private static void clearScreen(){
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    }
-
 }
