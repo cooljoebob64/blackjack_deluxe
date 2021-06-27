@@ -1,24 +1,45 @@
 package com.jlu.blackjack;
 
+import com.jlu.clihelper.CLIHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class Game {
+
+    CLIHelper cli;
+
+    String bannerText = """
+            ░█▀▄░█░░░█▀█░█▀▀░█░█░▀▀█░█▀█░█▀▀░█░█░░░█▀▄░█▀▀░█░░░█░█░█░█░█▀▀
+            ░█▀▄░█░░░█▀█░█░░░█▀▄░░░█░█▀█░█░░░█▀▄░░░█░█░█▀▀░█░░░█░█░▄▀▄░█▀▀
+            ░▀▀░░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀░░▀░▀░▀▀▀░▀░▀░░░▀▀░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀
+                """;
+
     /**
      * Empty constructor, starts game with default rules
      */
     public Game(){
         this(new Rules());
     }
-
+    public Game(CLIHelper cli){
+        this(new Rules(), cli);
+    }
+    public Game(Rules gameRules){
+        this(gameRules, CLIHelper.getInstance());
+    }
     /**
      * Constructor to start the game with specified rules set
      * @param gameRules A rules object that specifies how the game will be played
      */
-    public Game(Rules gameRules){
+    public Game(Rules gameRules, CLIHelper cli){
         myScanner = new Scanner(System.in);
+        this.cli = cli;
+        String oldBanner = cli.getLine();
+        cli.setLine(bannerText);
+        cli.setScanner(myScanner);
+
         players = new ArrayList<>();
 
         this.currentRules = gameRules;
@@ -26,14 +47,13 @@ public class Game {
         this.keepPlaying = true;
 
 //        enterToContinue();
-        utilityClearScreen();
-        utilityDrawLine();
-        System.out.println("Game Rules:");
-        System.out.println(currentRules.getFormattedRules());
-        utilityEnterToContinue();
+        cli.nicePrint(new String[]{"Game Rules:",
+                currentRules.getFormattedRules()});
+        cli.enterToContinue();
 
         newGameSetup();
         mainLoop();
+        cli.setLine(oldBanner);
     }
 
     private enum State{
@@ -91,16 +111,14 @@ public class Game {
                 case CLEANUP -> {
                     stateCleanup();
                 }
-                default -> System.out.println("Error! State not loaded.");
+                default -> cli.nicePrint("Error! State not loaded.");
             }
         } while(keepPlaying);
     }
 
     private void statePreDeal(){
-        utilityClearScreen();
-        utilityDrawLine();
-        System.out.println("Starting new round!");
-        utilityEnterToContinue();
+        cli.nicePrint("Starting new round!");
+        cli.enterToContinue();
         for(Player player:players){
             player.setActive(true);
             player.clearHands();
@@ -114,50 +132,46 @@ public class Game {
             boolean stillBetting = true;
             do {
                 if(player.getBank()<minBet){
-                    utilityClearScreen();
-                    utilityDrawLine();
-                    System.out.println("Your current bank: " + player.getBank());
-                    System.out.println("Hey, you are all outta money!");
-                    System.out.println("That's alright, we're really nice here.");
-                    System.out.println("We'll put you back in the game.");
+                    cli.nicePrint(new String[]{"Your current bank: " + player.getBank(),
+                            "Hey, you are all outta money!",
+                            "That's alright, we're really nice here.",
+                            "We'll put you back in the game."});
                     player.setBank((int)currentRules.getMinBet());
-                    utilityEnterToContinue();
+                    cli.enterToContinue();
                 }
                 boolean awaitingInput = true;
                 do{
-                    utilityClearScreen();
-                    utilityDrawLine();
-                    System.out.println(player.getName() + ": Your Bet.");
-                    System.out.println("Your current bank: " + player.getBank());
-                    System.out.println("How much would you like to bet on this hand?");
-                    System.out.println("(Minimum bet: " + minBet + ")");
-                    System.out.println("Bet Amount: (enter for minimum)");
+                    cli.nicePrint(new String[]{player.getName() + ": Your Bet.",
+                            "Your current bank: " + player.getBank(),
+                            "How much would you like to bet on this hand?",
+                            "(Minimum bet: " + minBet + ")",
+                            "Bet Amount: (enter for minimum)"});
                     String response = myScanner.nextLine();
                     if(response.isBlank()){
                         betAmount = minBet;
                         player.bet(player.getCurrentHand(), betAmount);
-                        System.out.println("You are betting the minimum: " + player.getCurrentHand().getBetAmount());
-                        utilityEnterToContinue();
+                        cli.nicePrint("You are betting the minimum: " + player.getCurrentHand().getBetAmount());
+                        cli.enterToContinue();
                         stillBetting = false;
                         awaitingInput = false;
                     } else {
                         try {
                             betAmount = Integer.parseInt(response);
                             if (betAmount < minBet) {
-                                System.out.println("Bet too low! Try again.");
-                                utilityEnterToContinue();
+                                cli.nicePrint("Bet too low! Try again.");
+                                cli.enterToContinue();
                             } else if (betAmount > player.getBank()) {
-                                System.out.println("Hey, you don't have that much! Try again.");
-                                utilityEnterToContinue();
+                                cli.nicePrint("Hey, you don't have that much! Try again.");
+                                cli.enterToContinue();
                             } else {
                                 player.bet(player.getCurrentHand(), betAmount);
-                                System.out.println("You are betting: " + player.getCurrentHand().getBetAmount());
+                                cli.nicePrint("You are betting: " + player.getCurrentHand().getBetAmount());
                                 stillBetting = false;
                             }
                             awaitingInput = false;
                         } catch (NumberFormatException e) {
-                            System.out.println("That's not a valid number! Try that again...");
-                            utilityEnterToContinue();
+                            cli.nicePrint("That's not a valid number! Try that again...");
+                            cli.enterToContinue();
                         }
                     }
                 } while(awaitingInput);
@@ -167,7 +181,6 @@ public class Game {
         dealerHand.clearHand();
         dealerHand.addCard(deck.dealCard());
         dealerHand.addCard(deck.dealCard());
-
 
         activeHand = firstPlayer.getCurrentHand();
         utilityPrintBoard();
@@ -204,14 +217,10 @@ public class Game {
         boolean validChoice = false;
         do {
             utilityPrintBoard();
-            utilityPrintPossibleActions();
-            String isSplitHand = activeHand.isMainHand() ? "main" : "split";
-            System.out.println("(this is your " + isSplitHand + " hand)");
-            System.out.println("What would you like to do?");
             String response = myScanner.nextLine();
             if(response.isEmpty()){
-                System.out.println("Invalid command! Try again.");
-                utilityEnterToContinue();
+                cli.nicePrint("Invalid command! Try again.");
+                cli.enterToContinue();
                 validChoice = false;
             } else {
                 response = response.substring(0,1).toUpperCase(Locale.ROOT);
@@ -226,7 +235,6 @@ public class Game {
                     case "S" -> {
                         if (firstPlayer.getCurrentHand().getActions().contains(Action.STAND)) {
                             validChoice = true;
-
                             playerActionStand();
                             activeHand.getOwner().setOnFirstAction(false);
                         }
@@ -270,7 +278,7 @@ public class Game {
                             playerActionPrintDeckStats();
                             validChoice = true;
                         } else{
-                            System.out.println("Cheat mode not enabled, nice try!");
+                            cli.nicePrint("Cheat mode not enabled, nice try!");
                         }
                     }
                     case "Q" -> {
@@ -278,8 +286,8 @@ public class Game {
                         validChoice = true;
                     }
                     default -> {
-                        System.out.println("Invalid command! Try again.");
-                        utilityEnterToContinue();
+                        cli.nicePrint("Invalid command! Try again.");
+                        cli.enterToContinue();
                         validChoice = false;
                     }
                 }
@@ -288,38 +296,35 @@ public class Game {
         } while(!validChoice);
     }
     private void stateDealerReveal(){
-        utilityClearScreen();
-        utilityDrawLine();
-        System.out.println("Dealer reveals their hand: ");
-        System.out.println(dealerHand.cardsToString());
-        System.out.println("Initial hand value: " + dealerHand.highestNonBust());
+        List<String> dealerHandBuilder = new ArrayList<>();
+        dealerHandBuilder.add("Dealer reveals their hand: ");
+        dealerHandBuilder.add(dealerHand.cardsToString());
+        dealerHandBuilder.add("Initial hand value: " + dealerHand.highestNonBust());
         // Check dealer blackjack for insurance payout
         if(dealerHand.highestNonBust()==21 && dealerHand.getCurrentCards().size()==2 && currentRules.isInsurance()){
             for(Player player: players){
                 for (Hand hand:player.getAllHands()){
                     if(hand.getInsuranceAmount()>0){
                         String isMain = hand.isMainHand()?"main":"split";
-                        System.out.println(player.getName() +", the dealer had Blackjack, and you had insurance on " +
+                        dealerHandBuilder.add(player.getName() +", the dealer had Blackjack, and you had insurance on " +
                                 "your "+ isMain +" hand!");
-                        System.out.println("Insurance amount: " + hand.getInsuranceAmount());
-                        System.out.println("Insurance payout rate: " + currentRules.getInsurancePayout());
+                        dealerHandBuilder.add("Insurance amount: " + hand.getInsuranceAmount());
+                        dealerHandBuilder.add("Insurance payout rate: " + currentRules.getInsurancePayout());
                         int insuranceReward = (int)Math.floor(hand.getInsuranceAmount() * currentRules.getInsurancePayout());
-                        System.out.println("You get: " + insuranceReward + " immediately!");
+                        dealerHandBuilder.add("You get: " + insuranceReward + " immediately!");
                         player.pay(insuranceReward);
-                        utilityEnterToContinue();
                     }
                 }
             }
         }
-        System.out.println("Dealer will play now!");
-        utilityEnterToContinue();
+        dealerHandBuilder.add("Dealer will play now!");
+        cli.nicePrint(dealerHandBuilder);
+        cli.enterToContinue();
         this.currentState = State.DEALER_UP;
     }
     private void stateDealerUp(){
-        utilityClearScreen();
-        utilityDrawLine();
         Hand dealerHand = dealer.getCurrentHand();
-        System.out.println("Dealer's starting hand: " + dealerHand.cardsToString());
+        cli.nicePrint("Dealer's starting hand: " + dealerHand.cardsToString());
         boolean keepDealing = true;
         do {
             int dealerValue = dealerHand.highestNonBust();
@@ -342,30 +347,29 @@ public class Game {
                 }
             }
 //            System.out.println("Dealer's hand: " + enumerateDealerCards() + ", highest value: " + dealerHand.highestNonBust());
-            utilityEnterToContinue();
+//            cli.enterToContinue();
         } while(keepDealing);
         this.currentState = State.PAYOUT;
     }
     private void statePayout(){
-        utilityClearScreen();
-        utilityDrawLine();
+        List<String> payoutBuilder = new ArrayList<>();
         int dealerValue = dealer.getCurrentHand().highestNonBust();
-        System.out.println("Dealer hand value: " + dealerValue);
+        payoutBuilder.add("Dealer hand value: " + dealerValue);
         for(Player player:players){
-            System.out.println("Calculating hands for " + player.getName());
+            payoutBuilder.add("Calculating hands for " + player.getName());
             for(Hand hand : player.getAllHands()){
-                System.out.println("This hand: " + hand.cardsToString());
+                payoutBuilder.add("This hand: " + hand.cardsToString());
                 String isMain = "main";
                 if(!hand.isMainHand()){
                     isMain = "split";
                 }
-                System.out.println("(this is your " + isMain + " hand)");
-                System.out.println("Highest value: " + hand.highestNonBust());
+                payoutBuilder.add("(this is your " + isMain + " hand)");
+                payoutBuilder.add("Highest value: " + hand.highestNonBust());
                 if(hand.isSurrendered()){
-                    System.out.println("You surrendered, and already got your money back.");
+                    payoutBuilder.add("You surrendered, and already got your money back.");
                 }
                 if(hand.isTookEvenMoney()){
-                    System.out.println("You took the Even Money option!");
+                    payoutBuilder.add("You took the Even Money option!");
                 }
                 int highValue = hand.highestNonBust();
                 int payoutAmount;
@@ -374,59 +378,58 @@ public class Game {
 
                     if(hand.isTookEvenMoney()){ // Even money taken
                         if(dealerValue==21&&dealerHand.getCurrentCards().size()==2){ // Both Blackjack
-                            System.out.println("Dealer also has Blackjack! You get Even Money!");
-                            System.out.println("Bet: " + hand.getBetAmount());
+                            payoutBuilder.add("Dealer also has Blackjack! You get Even Money!");
+                            payoutBuilder.add("Bet: " + hand.getBetAmount());
                             payoutAmount = hand.getBetAmount();
-                            System.out.println("You win Even Money payout: " + payoutAmount);
+                            payoutBuilder.add("You win Even Money payout: " + payoutAmount);
                         }
                         else { // Player wins, took even money
-                            System.out.println("You win with Blackjack, but took even money.");
-                            System.out.println("Bet: " + hand.getBetAmount());
+                            payoutBuilder.add("You win with Blackjack, but took even money.");
+                            payoutBuilder.add("Bet: " + hand.getBetAmount());
                             payoutAmount = hand.getBetAmount() * 2;
-                            System.out.println("You win: " + payoutAmount);
+                            payoutBuilder.add("You win: " + payoutAmount);
                         }
                     }
                     else { // Even Money not taken
                         payoutAmount = (int) Math.ceil(hand.getBetAmount() * currentRules.getBlackjackPayout()) + hand.getBetAmount();
-                        System.out.println("Blackjack!");
-                        System.out.println("Bet: " + hand.getBetAmount());
-                        System.out.println("Blackjack payout: " + currentRules.getBlackjackPayout());
-                        System.out.println("You win: " + payoutAmount);
+                        payoutBuilder.add("Blackjack!");
+                        payoutBuilder.add("Bet: " + hand.getBetAmount());
+                        payoutBuilder.add("Blackjack payout: " + currentRules.getBlackjackPayout());
+                        payoutBuilder.add("You win: " + payoutAmount);
                     }
                 } else if(highValue>21){ // Busted hand
-                    System.out.println("This hand busted!");
-                    System.out.println("House keeps your bet!");
+                    payoutBuilder.add("This hand busted!");
+                    payoutBuilder.add("House keeps your bet!");
                     payoutAmount = 0;
                 } else if(highValue>dealerValue||dealerValue>21){ // Hand beats dealer
-                    System.out.println("Your " + highValue + " beats the dealer!");
+                    payoutBuilder.add("Your " + highValue + " beats the dealer!");
                     payoutAmount = 2* hand.getBetAmount();
                 } else if(highValue==dealerValue){ // Push
-                    System.out.println("You tied the dealer. Push!");
+                    payoutBuilder.add("You tied the dealer. Push!");
                     if(currentRules.getPushRule()==0){ // No action
-                        System.out.println("No action. Bet refunded!");
+                        payoutBuilder.add("No action. Bet refunded!");
                         payoutAmount = hand.getBetAmount();
                     } else if(currentRules.getPushRule()==1){ // Player win
-                        System.out.println("Player wins the push!");
+                        payoutBuilder.add("Player wins the push!");
                         payoutAmount = hand.getBetAmount()*2;
                     } else { // Player loss
-                        System.out.println("Player loses the push!");
+                        payoutBuilder.add("Player loses the push!");
                         payoutAmount = 0;
                     }
                 } else { // Hand loses to dealer
-                    System.out.println("Your " + highValue + " didn't beat the dealer. Sorry!");
+                    payoutBuilder.add("Your " + highValue + " didn't beat the dealer. Sorry!");
                     payoutAmount = 0;
                 }
-                System.out.println("You receive: " + payoutAmount);
+                payoutBuilder.add("You receive: " + payoutAmount);
                 player.pay(payoutAmount);
-                System.out.println("Your new bank: " + player.getBank());
+                payoutBuilder.add("Your new bank: " + player.getBank());
             }
         }
-        utilityEnterToContinue();
+        cli.nicePrint(payoutBuilder);
+        cli.enterToContinue();
         this.currentState = State.CLEANUP;
     }
     private void stateCleanup(){
-        utilityClearScreen();
-        utilityDrawLine();
 //        System.out.println("Setting up for a new round");
         dealerHand.clearHand();
         for(Player player:players){
@@ -439,216 +442,219 @@ public class Game {
     }
 
     private void playerActionHit() {
-        utilityClearScreen();
-        utilityDrawLine();
 
-        System.out.println("You hit!");
+        List<String> actionBuilder = new ArrayList<>();
+
+        actionBuilder.add("You hit!");
         Card newPlayerCard = deck.dealCard();
         activeHand.addCard(newPlayerCard);
-        System.out.println("You drew: " + newPlayerCard.cardName());
-        System.out.println("Your new hand: " + activeHand.cardsToString());
+        actionBuilder.add("You drew: " + newPlayerCard.cardName());
+        actionBuilder.add("Your new hand: " + activeHand.cardsToString());
         if(activeHand.highestNonBust()>21){
-            System.out.println(activeHand.highestNonBust() + ", your hand busted!");
+            actionBuilder.add(activeHand.highestNonBust() + ", your hand busted!");
             if(!activeHand.isMainHand()||firstPlayer.getSplitHand()==null){
                 currentState = State.DEALER_REVEAL;
             }
         } else if (activeHand.highestNonBust()==21){
-            System.out.println("21, nice!");
+            actionBuilder.add("21, nice!");
         } else {
-            System.out.println("Your possible hand values: " + activeHand.possibleValues());
+            actionBuilder.add("Your possible hand values: " + activeHand.possibleValues());
         }
-        utilityEnterToContinue();
+        cli.nicePrint(actionBuilder);
+        cli.enterToContinue();
     }
     private void playerActionStand() {
-        utilityClearScreen();
-        utilityDrawLine();
-        System.out.println("You stand!");
-        System.out.print("Your current hand: " + activeHand.cardsToString());
+        List<String> actionBuilder = new ArrayList<>();
+        actionBuilder.add("You stand!");
+        actionBuilder.add("Your current hand: " + activeHand.cardsToString());
         String isSplit = "main";
         if(!activeHand.isMainHand()){
             isSplit = "split";
         }
-        System.out.println("(this is your "+ isSplit +" hand)");
-        System.out.println("Hand value: " + activeHand.highestNonBust());
+        actionBuilder.add("(this is your "+ isSplit +" hand)");
+        actionBuilder.add("Hand value: " + activeHand.highestNonBust());
         if(activeHand.isMainHand()&&firstPlayer.getSplitHand()!=null){
             activeHand = firstPlayer.getSplitHand();
         } else
             currentState = State.DEALER_REVEAL;
 
-        utilityEnterToContinue();
+        cli.nicePrint(actionBuilder);
+        cli.enterToContinue();
     }
     private void playerActionSplit() {
-        utilityClearScreen();
-        utilityDrawLine();
-        System.out.println("You split!");
+        List<String> actionBuilder = new ArrayList<>();
+        actionBuilder.add("You split!");
         firstPlayer.newHand(new Hand(currentRules));
         firstPlayer.getSplitHand().addCard(activeHand.getCurrentCards().get(1));
         firstPlayer.getSplitHand().setMainHand(false);
         firstPlayer.bet(firstPlayer.getSplitHand(), activeHand.getBetAmount());
         activeHand.getCurrentCards().remove(1);
-        System.out.println("Your main hand: " + firstPlayer.getCurrentHand().cardsToString());
-        System.out.println("Possible values: " + firstPlayer.getCurrentHand().possibleValues());
-        System.out.println("Your split hand: " + firstPlayer.getSplitHand().cardsToString());
-        System.out.println("Possible values: " + firstPlayer.getSplitHand().possibleValues());
-        utilityEnterToContinue();
+        actionBuilder.add("Your main hand: " + firstPlayer.getCurrentHand().cardsToString());
+        actionBuilder.add("Possible values: " + firstPlayer.getCurrentHand().possibleValues());
+        actionBuilder.add("Your split hand: " + firstPlayer.getSplitHand().cardsToString());
+        actionBuilder.add("Possible values: " + firstPlayer.getSplitHand().possibleValues());
+        cli.nicePrint(actionBuilder);
+        cli.enterToContinue();
     }
     private void playerActionDouble() {
-        utilityClearScreen();
-        utilityDrawLine();
-        System.out.println("You double down!");
+        List<String> actionBuilder = new ArrayList<>();
+        actionBuilder.add("You double down!");
         if(firstPlayer.getBank()<activeHand.getBetAmount()){
-            System.out.println("You're going into the negative here... But we'll allow it.");
+            actionBuilder.add("You're going into the negative here... But we'll allow it.");
         }
         firstPlayer.bet(activeHand, activeHand.getBetAmount());
+        cli.nicePrint(actionBuilder);
+        cli.enterToContinue();
         playerActionHit();
         playerActionStand();
         firstPlayer.setActive(false);
-        utilityEnterToContinue();
     }
     private void playerActionSurrender() {
-        utilityClearScreen();
-        utilityDrawLine();
-        System.out.println("You surrender! Get back half your bet (rounded down).");
+        List<String> actionBuilder = new ArrayList<>();
+        actionBuilder.add("You surrender! Get back half your bet (rounded down).");
         int surrenderReward = (int)Math.floor(activeHand.getBetAmount()*.5);
-        System.out.println("You get: " + surrenderReward + " back.");
+        actionBuilder.add("You get: " + surrenderReward + " back.");
         firstPlayer.pay(surrenderReward);
         activeHand.clearBet();
 //        firstPlayer.setActive(false);
-        utilityEnterToContinue();
+        cli.nicePrint(actionBuilder);
+        cli.enterToContinue();
     }
     private void playerActionInsurance() {
-        utilityClearScreen();
-        utilityDrawLine();
-        System.out.println("You've opted for insurance! This costs half of your original bet.");
+        List<String> actionBuilder = new ArrayList<>();
+        actionBuilder.add("You've opted for insurance! This costs half of your original bet.");
         int insuranceAmount = (int)Math.floor(activeHand.getBetAmount()*.5);
-        System.out.println("Insurance cost: " + insuranceAmount);
+        actionBuilder.add("Insurance cost: " + insuranceAmount);
         firstPlayer.pay(-insuranceAmount);
         activeHand.setInsuranceAmount(insuranceAmount);
-        System.out.println("Your new bank: " + firstPlayer.getBank());
-        utilityEnterToContinue();
+        actionBuilder.add("Your new bank: " + firstPlayer.getBank());
+        cli.nicePrint(actionBuilder);
+        cli.enterToContinue();
     }
     private void playerActionEvenMoney() {
-        utilityClearScreen();
-        utilityDrawLine();
-        System.out.println("You are taking the Even Money option!");
-        System.out.println("Your current hand: " + activeHand.getCurrentCards());
-        System.out.println("Current hand value: " + activeHand.highestNonBust());
-        System.out.println("If the dealer has a Blackjack, you will get your bet back.");
-        System.out.println("If you beat the dealer, you will win the regular (1:1) payout.");
+        cli.nicePrint(new String[]{"You are taking the Even Money option!",
+                "Your current hand: " + activeHand.getCurrentCards(),
+                "Current hand value: " + activeHand.highestNonBust(),
+                "If the dealer has a Blackjack, you will get your bet back.",
+                "If you beat the dealer, you will win the regular (1:1) payout."});
         activeHand.setTookEvenMoney(true);
-        utilityEnterToContinue();
+        cli.enterToContinue();
     }
     private void playerActionPrintDeckStats(){
-        utilityClearScreen();
-        utilityDrawLine();
-        System.out.println("Printing deck stats!");
-        System.out.println("Cards in shoe: " + deck.getCardsInShoe());
-        System.out.println("Next card to deal: " + deck.getPeekCard().cardName());
-//        System.out.println("All cards in shoe: " + deck.seeAllCardsInShoe());
-        System.out.println("Current shoe stack:" + deck.getCurrentShoe());
-        utilityEnterToContinue();
+        cli.nicePrint(new String[]{"Printing deck stats!",
+                "Cards in shoe: " + deck.getCardsInShoe(),
+                "Next card to deal: " + deck.getPeekCard().cardName(),
+                "All cards in shoe: " + deck.seeAllCardsInShoe(),
+                "Current shoe stack:" + deck.getCurrentShoe()});
+        cli.enterToContinue();
     }
     private void playerActionQuit() {
-        utilityClearScreen();
-        utilityDrawLine();
-        System.out.println("Quitting!");
+        cli.nicePrint("Quitting!");
         keepPlaying = false;
         currentState = State.CLEANUP;
-        utilityEnterToContinue();
+        cli.enterToContinue();
     }
 
     private void dealerActionStand() {
-        System.out.println("Dealer stands!");
-        System.out.println("Dealer's hand: " + dealerHand.cardsToString());
-        System.out.println("Dealer hand value: " + dealerHand.highestNonBust());
+        cli.nicePrint(new String[]{"Dealer stands!",
+                "Dealer's hand: " + dealerHand.cardsToString(),
+                "Dealer hand value: " + dealerHand.highestNonBust()});
+        cli.enterToContinue();
     }
     private void dealerActionHit(){
-        System.out.println("Dealer hits!");
         Card newDealerCard = deck.dealCard();
-        System.out.println("Dealer draws: " + newDealerCard.cardName());
+        cli.nicePrint(new String[]{"Dealer hits!",
+                "Dealer draws: " + newDealerCard.cardName()});
         dealer.getCurrentHand().addCard(newDealerCard);
+        cli.enterToContinue();
     }
     private void dealerActionBust() {
-        System.out.println("Dealer is busted!");
+        cli.nicePrint("Dealer is busted!");
+        cli.enterToContinue();
     }
 
-    private void utilityClearScreen(){
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    }
-    private void utilityDrawLine(){
-        // Provides a re-usable way to draw a graphical line in the console
-        System.out.println("""
-            ░█▀▄░█░░░█▀█░█▀▀░█░█░▀▀█░█▀█░█▀▀░█░█░░░█▀▄░█▀▀░█░░░█░█░█░█░█▀▀
-            ░█▀▄░█░░░█▀█░█░░░█▀▄░░░█░█▀█░█░░░█▀▄░░░█░█░█▀▀░█░░░█░█░▄▀▄░█▀▀
-            ░▀▀░░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀░░▀░▀░▀▀▀░▀░▀░░░▀▀░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀
-                """);
-    }
-    private void utilityEnterToContinue(){
-        // Prompts the user to press enter before continuing
-        System.out.println("Press Enter to continue...");
-        myScanner.nextLine();
-    }
+//    private void utilityClearScreen(){
+//        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+//    }
+//    private void utilityDrawLine(){
+//        // Provides a re-usable way to draw a graphical line in the console
+//        System.out.println("""
+//            ░█▀▄░█░░░█▀█░█▀▀░█░█░▀▀█░█▀█░█▀▀░█░█░░░█▀▄░█▀▀░█░░░█░█░█░█░█▀▀
+//            ░█▀▄░█░░░█▀█░█░░░█▀▄░░░█░█▀█░█░░░█▀▄░░░█░█░█▀▀░█░░░█░█░▄▀▄░█▀▀
+//            ░▀▀░░▀▀▀░▀░▀░▀▀▀░▀░▀░▀▀░░▀░▀░▀▀▀░▀░▀░░░▀▀░░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀
+//                """);
+//    }
+//    private void utilityEnterToContinue(){
+//        // Prompts the user to press enter before continuing
+//        System.out.println("Press Enter to continue...");
+//        myScanner.nextLine();
+//    }
     private void utilityPrintBoard(){
 
-        utilityClearScreen();
-        utilityDrawLine();
+        List<String> boardBuilder = new ArrayList<>();
 
         // Print dealer hand
-        System.out.println(utilityEnumerateDealerCards());
+        boardBuilder.add(utilityEnumerateDealerCards());
         // Print player bank
-        System.out.println("Current bank: " + firstPlayer.getBank());
+        boardBuilder.add("Current bank: " + firstPlayer.getBank());
         // Print player hand information
-        System.out.println("Your main hand: " + firstPlayer.getCurrentHand().cardsToString());
-        System.out.println("Main hand bet: " + firstPlayer.getAllHands().get(0).getBetAmount());
-        System.out.println("Main hand possible Values: " + firstPlayer.getCurrentHand().possibleValues());
+        boardBuilder.add("Your main hand: " + firstPlayer.getCurrentHand().cardsToString());
+        boardBuilder.add("Main hand bet: " + firstPlayer.getAllHands().get(0).getBetAmount());
+        boardBuilder.add("Main hand possible Values: " + firstPlayer.getCurrentHand().possibleValues());
         String playerSplitHand = "";
         if(firstPlayer.getSplitHand()!= null){
-            playerSplitHand = "Your split hand: " + firstPlayer.getSplitHand().cardsToString();
-            System.out.println("Split hand bet: " + firstPlayer.getAllHands().get(1).getBetAmount());
-            System.out.println("Split hand possible Values: " + firstPlayer.getSplitHand().possibleValues());
+            boardBuilder.add("Your split hand: " + firstPlayer.getSplitHand().cardsToString());
+            boardBuilder.add("Split hand bet: " + firstPlayer.getAllHands().get(1).getBetAmount());
+            boardBuilder.add("Split hand possible Values: " + firstPlayer.getSplitHand().possibleValues());
         } else
-            playerSplitHand = "You do not have a split hand.\n";
-        System.out.println(playerSplitHand);
+            boardBuilder.add("You do not have a split hand.\n");
+
+        utilityPrintPossibleActions(boardBuilder);
 }
-    private void utilityPrintPossibleActions() {
-        System.out.println("Pick an action:");
+    private void utilityPrintPossibleActions(List<String> boardBuilder) {
+        boardBuilder.add("Pick an action:");
 //        int skipLines = 0;
         if(activeHand.getActions().contains(Action.STAND)){
-            System.out.println(Action.STAND.commandLetter() +": Stand");
+            boardBuilder.add(Action.STAND.commandLetter() +": Stand");
         }
 //        else skipLines++;
         if(activeHand.getActions().contains(Action.HIT)){
-            System.out.println(Action.HIT.commandLetter() +": Hit");
+            boardBuilder.add(Action.HIT.commandLetter() +": Hit");
         }
 //        else skipLines++;
         if(activeHand.getActions().contains(Action.DOUBLE)){
-            System.out.println(Action.DOUBLE.commandLetter() +": Double Down");
+            boardBuilder.add(Action.DOUBLE.commandLetter() +": Double Down");
         }
 //        else skipLines++;
         if(activeHand.getActions().contains(Action.SPLIT)){
-            System.out.println(Action.SPLIT.commandLetter() +": Split");
+            boardBuilder.add(Action.SPLIT.commandLetter() +": Split");
         }
 //        else skipLines++;
         if(activeHand.getActions().contains(Action.SURRENDER)){
-            System.out.println(Action.SURRENDER.commandLetter() +": Surrender");
+            boardBuilder.add(Action.SURRENDER.commandLetter() +": Surrender");
         }
 //        else skipLines++;
         if(activeHand.getActions().contains(Action.INSURANCE)){
-            System.out.println(Action.INSURANCE.commandLetter() +": Buy Insurance");
+            boardBuilder.add(Action.INSURANCE.commandLetter() +": Buy Insurance");
         }
 //        else skipLines++;
         if(activeHand.getActions().contains(Action.EVEN_MONEY)){
-            System.out.println(Action.EVEN_MONEY.commandLetter() +": Take Even-Money Option");
+            boardBuilder.add(Action.EVEN_MONEY.commandLetter() +": Take Even-Money Option");
         }
 //        else skipLines++;
         if(currentRules.isCheatMode()){
-            System.out.println(Action.GET_DECK_STATS.commandLetter() +": Get Deck Stats");
+            boardBuilder.add(Action.GET_DECK_STATS.commandLetter() +": Get Deck Stats");
         }
 //        else skipLines++;
-        System.out.println(Action.QUIT.commandLetter() +": Quit");
+        boardBuilder.add(Action.QUIT.commandLetter() +": Quit");
 //        for(int i=0; i<skipLines;i++){
 //            System.out.println();
 //        }
+
+        String isSplitHand = activeHand.isMainHand() ? "main" : "split";
+        boardBuilder.add("(this is your " + isSplitHand + " hand)");
+        boardBuilder.add("What would you like to do?");
+        cli.nicePrint(boardBuilder);
     }
     private String utilityEnumerateDealerCards() {
         List<Card> dealerCards = dealer.getCurrentHand().getCurrentCards();

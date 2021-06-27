@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Main {
 
     static CLIHelper cli;
-    static final int CONSOLE_SIZE = 10;
+    static final int CONSOLE_SIZE = 22;
     static String bannerText = """
                 \s\s+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+ +-+ +-+-+-+-+ +-+-+-+-+
                 \s\s|B|l|a|c|k|j|a|c|k| |D|e|l|u|x|e| |-| |M|a|i|n| |M|e|n|u|

@@ -478,7 +478,7 @@ public class RulesBuilder {
                 cli.nicePrint("Great! Starting game with your selected rules.");
                 cli.enterToContinue();
                 awaitingInput = false;
-                new Game(potentialRules);
+                new Game(potentialRules, cli);
             } else if(response.equalsIgnoreCase("N")){
                 cli.nicePrint("Ok, returning you to rules selection...");
                 awaitingInput= false;
