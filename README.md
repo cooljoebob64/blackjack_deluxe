@@ -39,7 +39,10 @@ This application is a work in progress. Check back soon for updates!
   `gradle --console plain run`
 - You can also run the Main class in your Java IDE of choice
 ### Release Version
-- Once extracted, the application can be executed by running  the batch file in the `bin` directory.
+- Once extracted, the application can be executed by running the batch file in the `bin` directory, which should open 
+  the app in your default console application (usually `cmd.exe` in windows).
+- Alternatively, you can execute `java -jar blackjack_deluxe-x.x.jar` in the lib folder using the terminal application 
+  of your choice.
 
 ## 💻 Technologies
 - [Java JDK 15](https://www.oracle.com/java/technologies/javase/jdk15-archive-downloads.html)

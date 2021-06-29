@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.jlu'
-version '1.0'
+version '1.1'
 
 apply plugin: 'application'
 mainClassName = 'com.jlu.Main.class'
